@@ -1,0 +1,15 @@
+.git
+.venv
+models
+out
+scripts
+examples
+e2e
+tests
+fixtures
+profile
+capture
+stub
+docs
+**/__pycache__
+*.pyc

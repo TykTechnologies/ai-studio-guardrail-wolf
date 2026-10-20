@@ -1,0 +1,110 @@
+{
+ "case": "google_stream_hub_turn1",
+ "status": 200,
+ "calls": [
+  {
+   "direction": "request",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "system",
+     "text": "{\"name\": \"shell\", \"description\": \"Run a shell command in the checkout\", \"parameters\": {\"type\": \"object\", \"properties\": {\"cmd\": {\"type\": \"string\"}}}}",
+     "kind": "tool_definition",
+     "tool_name": "shell"
+    },
+    {
+     "index": 1,
+     "role": "system",
+     "text": "name\nshell\ndescription\nRun a shell command in the checkout\nparameters\ntype\nobject\nproperties\ncmd\ntype\nstring",
+     "kind": "tool_definition",
+     "tool_name": "shell"
+    },
+    {
+     "index": 2,
+     "role": "system",
+     "text": "{\"name\": \"read\", \"description\": \"Read a file from the checkout\", \"parameters\": {\"type\": \"object\", \"properties\": {\"cmd\": {\"type\": \"string\"}}}}",
+     "kind": "tool_definition",
+     "tool_name": "read"
+    },
+    {
+     "index": 3,
+     "role": "system",
+     "text": "name\nread\ndescription\nRead a file from the checkout\nparameters\ntype\nobject\nproperties\ncmd\ntype\nstring",
+     "kind": "tool_definition",
+     "tool_name": "read"
+    }
+   ],
+   "meta": {
+    "app_id": 2,
+    "is_chat": false,
+    "llm_id": 8,
+    "model": "gemini-2.0-flash",
+    "request_id": "",
+    "vendor": "google_ai"
+   }
+  },
+  {
+   "direction": "request",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "user",
+     "text": "Review pull request 12 and summarise the risks."
+    }
+   ],
+   "meta": {
+    "app_id": 2,
+    "is_chat": false,
+    "llm_id": 8,
+    "model": "gemini-2.0-flash",
+    "request_id": "",
+    "vendor": "google_ai"
+   }
+  },
+  {
+   "direction": "response",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "assistant",
+     "text": "{\"cmd\": \"cat README.md\"}",
+     "kind": "tool_call",
+     "tool_name": "shell",
+     "context": {
+      "user_goal": "Review pull request 12 and summarise the risks."
+     }
+    },
+    {
+     "index": 1,
+     "role": "assistant",
+     "text": "cmd\ncat README.md",
+     "kind": "tool_call",
+     "tool_name": "shell",
+     "context": {
+      "user_goal": "Review pull request 12 and summarise the risks."
+     }
+    }
+   ],
+   "meta": {
+    "app_id": 0,
+    "is_chat": false,
+    "llm_id": 8,
+    "model": "gemini-2.0-flash",
+    "request_id": "",
+    "vendor": "google_ai"
+   }
+  }
+ ]
+}

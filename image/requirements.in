@@ -1,0 +1,13 @@
+# Runtime dependencies of the sidecar image. Locked with hashes per
+# platform by `make lock` (image/requirements-<arch>.lock); torch comes from
+# PyTorch's CPU-only index.
+torch==2.14.1
+transformers==5.20.1
+safetensors==0.8.0
+tokenizers==0.23.3
+huggingface-hub==2.2.0
+numpy==2.5.4
+pyyaml==6.0.3
+fastapi==0.149.0
+uvicorn==0.54.0
+prometheus-client==0.26.0

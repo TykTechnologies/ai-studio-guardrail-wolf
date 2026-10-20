@@ -1,0 +1,92 @@
+{
+ "case": "cache_openai_next_turn_hub",
+ "status": 200,
+ "calls": [
+  {
+   "direction": "request",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "tool",
+     "text": "print('hello')\n",
+     "kind": "tool_result",
+     "tool_name": "read",
+     "tool_call_id": "call_cap2"
+    }
+   ],
+   "meta": {
+    "app_id": 2,
+    "is_chat": false,
+    "llm_id": 6,
+    "model": "gpt-4.1",
+    "request_id": "",
+    "vendor": "openai"
+   }
+  },
+  {
+   "direction": "request",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "assistant",
+     "text": "{\"path\": \"app.py\"}",
+     "kind": "tool_call",
+     "tool_name": "read",
+     "tool_call_id": "call_cap2",
+     "context": {
+      "user_goal": "Review pull request 12 and summarise the risks."
+     }
+    },
+    {
+     "index": 1,
+     "role": "assistant",
+     "text": "path\napp.py",
+     "kind": "tool_call",
+     "tool_name": "read",
+     "tool_call_id": "call_cap2",
+     "context": {
+      "user_goal": "Review pull request 12 and summarise the risks."
+     }
+    }
+   ],
+   "meta": {
+    "app_id": 2,
+    "is_chat": false,
+    "llm_id": 6,
+    "model": "gpt-4.1",
+    "request_id": "",
+    "vendor": "openai"
+   }
+  },
+  {
+   "direction": "response",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "assistant",
+     "text": "done: print('hello')\n"
+    }
+   ],
+   "meta": {
+    "app_id": 0,
+    "is_chat": false,
+    "llm_id": 6,
+    "model": "gpt-4.1",
+    "request_id": "",
+    "vendor": "openai"
+   }
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+[project]
+name = "wolfguard"
+version = "0.1.0"
+description = "Wolf Defender Jev prompt-injection guardrail sidecar for Tyk AI Studio 2.3+ (HTTP guardrail provider)"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["pyyaml==6.0.3"]
+
+[project.optional-dependencies]
+model = ["torch==2.14.1", "transformers==5.20.1", "safetensors==0.8.0", "tokenizers==0.23.3"]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools]
+packages = ["wolfguard"]

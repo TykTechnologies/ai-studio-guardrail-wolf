@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+/models/
+/weights/
+*.onnx
+*.safetensors
+*.bin
+/out/
+/.cache/
+/eval/cache/
+/e2e/.run/
+/e2e/.build/

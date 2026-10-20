@@ -1,0 +1,28 @@
+{
+ "case": "cache_openai_resend_same_hub",
+ "status": 200,
+ "calls": [
+  {
+   "direction": "response",
+   "detectors": [
+    "prompt_attack"
+   ],
+   "redact": false,
+   "segments": [
+    {
+     "index": 0,
+     "role": "assistant",
+     "text": "done: {\"stdout\": \"diff --git a/app.py b/app.py\\n+print('hello')\\n\""
+    }
+   ],
+   "meta": {
+    "app_id": 0,
+    "is_chat": false,
+    "llm_id": 6,
+    "model": "gpt-4.1",
+    "request_id": "",
+    "vendor": "openai"
+   }
+  }
+ ]
+}

@@ -1,0 +1,5828 @@
+{
+ "openai_rest_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_rest_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "openai_stream_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_stream_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "responses_rest_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "responses_rest_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "responses_stream_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "responses_stream_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_rest_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_rest_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_stream_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_stream_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "google_rest_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "google_rest_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "chars": 143,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "google_stream_hub_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "google_stream_hub_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "chars": 143,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "ai_bridge_rest_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 140
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 133
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 37
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "ai_bridge_stream_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 140
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 133
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 37
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_rest_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_rest_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "openai_stream_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_stream_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "responses_rest_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "responses_rest_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "responses_stream_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "responses_stream_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 168
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 122,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 161
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 115,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_rest_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_rest_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_stream_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "anthropic_stream_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "google_rest_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "google_rest_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "chars": 143,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "google_stream_edge_turn1": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "google_stream_edge_turn2": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 148
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 108,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 141
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 101,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "chars": 143,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "ai_bridge_rest_edge": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 140
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 133
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 37
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "ai_bridge_stream_edge": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 140
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 133
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 37
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 24
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "toolu_mock_r1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 17,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ },
+ "openai_x_request_id_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "cap-request-0001",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "cap-request-0001",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "cap-request-0001",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "cap-request-0001",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "cap-request-0001",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "openai_large_tool_result_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 1024
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 32768
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 32768
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 1024
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 32768
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 1024
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 2896
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "cache_openai_first_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 182
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 131,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 175
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 124,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 38
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 31,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "user",
+      "chars": 47
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 152
+     },
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "shell",
+      "tool_call_id": "call_cap1",
+      "chars": 137,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "cache_openai_resend_same_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 66
+     }
+    ]
+   }
+  ]
+ },
+ "cache_openai_next_turn_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "read",
+      "tool_call_id": "call_cap2",
+      "chars": 15
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "read",
+      "tool_call_id": "call_cap2",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 18
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "read",
+      "tool_call_id": "call_cap2",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 11
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 21
+     }
+    ]
+   }
+  ]
+ },
+ "cache_anthropic_same_content_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 150
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "shell",
+      "chars": 110,
+      "decoded_view": true
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 143
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "read",
+      "chars": 103,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "response",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "app_id",
+     "is_chat",
+     "llm_id",
+     "model",
+     "request_id",
+     "vendor"
+    ],
+    "request_id": "",
+    "segments": [
+     {
+      "role": "assistant",
+      "chars": 47
+     }
+    ]
+   }
+  ]
+ },
+ "studio_chat_hub": {
+  "status": 200,
+  "calls": [
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "is_chat",
+     "model",
+     "session_id",
+     "user_id",
+     "vendor"
+    ],
+    "request_id": null,
+    "segments": [
+     {
+      "role": "user",
+      "chars": 70
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "is_chat",
+     "model",
+     "session_id",
+     "user_id",
+     "vendor"
+    ],
+    "request_id": null,
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "runShell",
+      "chars": 210
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "runShell",
+      "chars": 155,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "is_chat",
+     "model",
+     "session_id",
+     "tool_name",
+     "user_id",
+     "vendor"
+    ],
+    "request_id": null,
+    "segments": [
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "runShell",
+      "tool_call_id": "call_mock_56131",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 48
+     },
+     {
+      "role": "assistant",
+      "kind": "tool_call",
+      "tool_name": "runShell",
+      "tool_call_id": "call_mock_56131",
+      "context": [
+       "user_goal"
+      ],
+      "chars": 36
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "is_chat",
+     "model",
+     "session_id",
+     "tool_name",
+     "user_id",
+     "vendor"
+    ],
+    "request_id": null,
+    "segments": [
+     {
+      "role": "tool",
+      "kind": "tool_result",
+      "tool_name": "runShell",
+      "tool_call_id": "call_mock_56131",
+      "chars": 143,
+      "decoded_view": true
+     }
+    ]
+   },
+   {
+    "direction": "request",
+    "detectors": [
+     "prompt_attack"
+    ],
+    "meta": [
+     "is_chat",
+     "model",
+     "session_id",
+     "user_id",
+     "vendor"
+    ],
+    "request_id": null,
+    "segments": [
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "runShell",
+      "chars": 210
+     },
+     {
+      "role": "system",
+      "kind": "tool_definition",
+      "tool_name": "runShell",
+      "chars": 155,
+      "decoded_view": true
+     }
+    ]
+   }
+  ]
+ }
+}

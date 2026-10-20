@@ -1,0 +1,49 @@
+# The guardrail next to AI Studio and the microgateway (docs/DEPLOY.md).
+# Merge these into your AI Studio compose project. AI Studio and the
+# microgateway reach the guardrail only over the guard-sock volume
+# (/run/wolfguard/wolfguard.sock, mode 0660, group 65532); the guardrail has
+# no network at all.
+
+volumes:
+  guard-sock: {}
+
+services:
+  wolfguard:
+    image: tykio/ai-studio-guardrail-wolf@sha256:<digest>   # pin by digest
+    network_mode: none
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    cpus: 4          # one large worker x 4 threads + one small worker
+    mem_limit: 4g
+    env_file:
+      - ./wolfguard.env                 # WOLFGUARD_TOKEN=..., mode 0600, never committed
+    environment:
+      WOLFGUARD_STATE_DIR: /var/lib/wolfguard        # decisions.jsonl, previews.jsonl, verdicts.db
+      WOLFGUARD_PREVIEW: "1"                         # 200-character previews of flagged text, secrets masked
+      # WOLFGUARD_POLICY: /etc/wolfguard/policy.yaml # the image's default; mount your own over it
+    volumes:
+      - guard-sock:/run/wolfguard
+      - ./wolfguard-state:/var/lib/wolfguard        # install -d -o 10001 -g 65532 -m 0750 wolfguard-state
+      # - ./policy.yaml:/etc/wolfguard/policy.yaml:ro
+    restart: always
+
+  # Your existing AI Studio and microgateway services gain the socket:
+  ai-studio:
+    environment:
+      GUARDRAIL_UNIX_SOCKET_ALLOWLIST: /run/wolfguard/
+    volumes:
+      - guard-sock:/run/wolfguard
+    depends_on:
+      wolfguard: {condition: service_healthy}
+
+  microgateway:
+    environment:
+      GUARDRAIL_UNIX_SOCKET_ALLOWLIST: /run/wolfguard/
+    volumes:
+      - guard-sock:/run/wolfguard
+    depends_on:
+      wolfguard: {condition: service_healthy}
