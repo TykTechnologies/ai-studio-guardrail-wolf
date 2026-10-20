@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 import threading
@@ -65,14 +66,46 @@ def tenant_of(meta: dict) -> str:
     return "-"
 
 
+NETWORK_FS = ("nfs", "nfs4", "cifs", "smb3", "smbfs", "9p", "ceph", "glusterfs", "lustre", "fuse")
+
+
+def network_fs(path: str, mounts: str = "/proc/mounts") -> bool:
+    """Whether path is on a network filesystem (the mount with the longest matching mount point)."""
+    try:
+        lines = open(mounts).read().splitlines()
+    except OSError:
+        return False
+    target = os.path.realpath(os.path.dirname(os.path.abspath(path)) or ".")
+    best, fstype = "", ""
+    for line in lines:
+        parts = line.split()
+        if len(parts) < 3:
+            continue
+        mp = parts[1].replace("\\040", " ")
+        if (target == mp or target.startswith(mp.rstrip("/") + "/") or mp == "/") and len(mp) > len(best):
+            best, fstype = mp, parts[2]
+    return fstype.startswith(NETWORK_FS)
+
+
+def journal_mode(path: str) -> str:
+    """WAL, except on a network filesystem, where SQLite's WAL is unsafe (its shared
+    memory does not work over the network): there the rollback journal (DELETE).
+    WOLFGUARD_STORE_JOURNAL forces one."""
+    forced = os.environ.get("WOLFGUARD_STORE_JOURNAL", "").upper()
+    if forced in ("WAL", "DELETE", "TRUNCATE", "PERSIST"):
+        return forced
+    return "DELETE" if network_fs(path) else "WAL"
+
+
 class VerdictStore:
     def __init__(self, path: str = ":memory:", flagged_ttl: float = FLAGGED_TTL, clean_ttl: float = CLEAN_TTL):
         self.path, self.flagged_ttl, self.clean_ttl = path, flagged_ttl, clean_ttl
         self._lock = threading.Lock()
         self.db = sqlite3.connect(path, check_same_thread=False, isolation_level=None, timeout=5)
         if path != ":memory:":
-            self.db.execute("PRAGMA journal_mode=WAL")
-            self.db.execute("PRAGMA synchronous=NORMAL")
+            self.journal = journal_mode(path)
+            self.db.execute(f"PRAGMA journal_mode={self.journal}")
+            self.db.execute("PRAGMA synchronous=NORMAL" if self.journal == "WAL" else "PRAGMA synchronous=FULL")
         self.db.executescript(_SCHEMA)
         self._purged = time.time()
 

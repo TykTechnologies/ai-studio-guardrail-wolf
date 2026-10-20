@@ -69,7 +69,10 @@ make sbom             # syft: SPDX JSON in out/
 - **State on a volume:** `WOLFGUARD_STATE_DIR=/workspace/wolfguard`. The image
   starts as root only to create that directory and hand it to uid 10001,
   then drops to 10001 with no capabilities and `no_new_privs`
-  (`image/entrypoint.sh`).
+  (`image/entrypoint.sh`). On a volume that refuses `chown` even to root
+  (Runpod's `/workspace` is NFS), the directory is left writable instead,
+  and the entrypoint checks that 10001 can write there before starting. On a
+  network filesystem the verdict store uses SQLite's rollback journal.
 - **Policy from the environment:** `WOLFGUARD_POLICY_YAML_B64`.
 
 ## Measured

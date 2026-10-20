@@ -1,6 +1,6 @@
 [project]
 name = "wolfguard"
-version = "0.1.0"
+version = "0.1.1"
 description = "Wolf Defender Jev prompt-injection guardrail sidecar for Tyk AI Studio 2.3+ (HTTP guardrail provider)"
 requires-python = ">=3.12"
 license = "MIT"

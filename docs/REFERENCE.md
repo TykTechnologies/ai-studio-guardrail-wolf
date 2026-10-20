@@ -147,6 +147,7 @@ For `user_messages: untrusted` apps, a `block` user message is reported as
 | `WOLFGUARD_STATE_DIR` | none (GPU: `/workspace/wolfguard`) | Holds `verdicts.db`, `decisions.jsonl` and `previews.jsonl` unless set one by one |
 | `WOLFGUARD_STORE` | off | The verdict store (a SQLite path, or `:memory:`); turns on deferred stages |
 | `WOLFGUARD_FLAGGED_TTL`, `WOLFGUARD_CLEAN_TTL` | 604800, 86400 | Seconds a flag, and a clean verdict, are kept |
+| `WOLFGUARD_STORE_JOURNAL` | `WAL`, or `DELETE` on a network filesystem | SQLite's journal mode for the store. WAL is unsafe on NFS, CIFS, FUSE and similar mounts (Runpod's `/workspace` is NFS), so the rollback journal is used there; set this to force one |
 | `WOLFGUARD_DECISION_LOG` | `-` (standard output) | The decision log, one JSON line per scored segment |
 | `WOLFGUARD_PREVIEW`, `WOLFGUARD_PREVIEW_CHARS` | off, 200 | Previews of flagged segments (secrets masked) |
 | `WOLFGUARD_PREVIEW_LOG` | in the decision line | Previews in their own file, for a shorter retention |
