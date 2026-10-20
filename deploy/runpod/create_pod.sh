@@ -21,7 +21,7 @@
 set -euo pipefail
 : "${IMAGE:?IMAGE=<registry>/ai-studio-guardrail-wolf-gpu@sha256:...}"
 : "${ALLOW_IPS:?ALLOW_IPS=<gateway egress IPs, comma-separated>}"
-: "${POLICY:?POLICY=<the deployment's policy YAML>}"
+: "${POLICY:?POLICY=<the policy YAML for this deployment>}"
 NAME=${NAME:-wolfguard-gpu}
 GPUS=${GPUS:-"NVIDIA RTX A4000,NVIDIA RTX A4500,NVIDIA RTX A5000,NVIDIA RTX 4000 Ada Generation"}
 DATACENTERS=${DATACENTERS:-"EU-SE-1,EU-RO-1,EU-CZ-1,EU-NL-1,EUR-IS-1,EUR-IS-2,EUR-NO-1"}
