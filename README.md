@@ -15,7 +15,7 @@ agent's traffic carries:
 Each stage reports graded detectors (`<stage>.review`, `<stage>.block`,
 `<stage>.critical`) and AI Studio filters choose which to act on and how.
 
-Images (public, signed, with SBOMs):
+Images (public, with SBOM and build-provenance attestations; pin them by digest):
 
 - **`tykio/ai-studio-guardrail-wolf`** (CPU, linux/amd64 and arm64): next to the
   gateway on a Unix socket, with no network, read-only, non-root.
