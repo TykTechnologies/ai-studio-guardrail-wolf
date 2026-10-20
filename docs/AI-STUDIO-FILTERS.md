@@ -1,5 +1,10 @@
 # AI Studio filters
 
+The complete walkthrough (deploying, the secret, every console field, testing,
+tuning, enforcing, troubleshooting) is **Wolf Defender guardrail** in the
+[AI Studio documentation](https://github.com/TykTechnologies/ai-studio/blob/main/docs/site/docs/guardrails-wolf-defender.md).
+This page is the filter configurations in brief.
+
 The guardrail is an Enterprise **HTTP guardrail** provider. Thresholds,
 question sets and each stage's enforcement mode live in the guardrail's
 policy (`config/policy.yaml`); AI Studio filters choose **which decisions to

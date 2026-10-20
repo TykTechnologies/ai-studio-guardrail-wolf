@@ -71,6 +71,8 @@ anything: thresholds should be tuned on your own traffic.
 
 | | |
 |---|---|
+| **AI Studio guide** | step by step in AI Studio: **Wolf Defender guardrail** in the [AI Studio documentation](https://github.com/TykTechnologies/ai-studio/blob/main/docs/site/docs/guardrails-wolf-defender.md) (deploying, the secret, every filter field, testing, tuning, enforcing, operating, troubleshooting) |
+| [docs/REFERENCE.md](docs/REFERENCE.md) | every policy field, environment variable, endpoint, metric and decision-log field |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | the contract, stages and questions, decisions, enforcement modes, security model |
 | [docs/AI-STUDIO-FILTERS.md](docs/AI-STUDIO-FILTERS.md) | AI Studio filter configuration for shadow and enforcement |
 | [docs/DEPLOY.md](docs/DEPLOY.md) | the CPU sidecar, a GPU host, Runpod, operations |
