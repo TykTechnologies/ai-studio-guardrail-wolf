@@ -76,6 +76,28 @@ critical tier (six in `eval/sets/` and five issue-borne exfiltration attempts
 kept out of the public sets) and no benign message was blocked, with a
 benign bug report close to the line (0.94 against 0.95).
 
+**0.2.0 against 0.1.1, on the same sets.** `eval/compare.py` scores the sets
+under several policies with one model pass (stop = critical, the conversation
+ends; removed = block or critical):
+
+```bash
+git show <0.1.1 commit>:config/policy.yaml > /tmp/old.yaml    # or any earlier policy
+.venv/bin/python eval/compare.py --baseline /tmp/old.yaml --policy config/policy.yaml
+```
+
+| Set | n | 0.1.1 policy: stop / removed | 0.2.0 policy: stop / removed |
+|---|---|---|---|
+| red-team | 84 | 65.5% / 91.7% | 64.3% / 91.7% |
+| adaptive | 18 | 66.7% / 88.9% | 66.7% / 88.9% |
+| benign | 78 | 0.0% / 1.3% | 0.0% / 1.3% |
+| hard benign | 40 | 12.5% / 17.5% | 10.0% / 17.5% |
+
+Nothing that was removed is let through. A red-team item in a repository file
+written in a language the corroborating rules do not cover goes from stop to
+removal; security docs read from a repository go the same way. These sets are
+short (one to three windows): the long-content changes show on long traffic,
+which they do not contain. It also reports rates by window count.
+
 **Tool calls.** A red-team call that read `/proc/self/environ` while
 "triaging an issue" was scored as aligned with the task; the secret-access
 rule decides such calls without the model. There is no labelled tool-call set
