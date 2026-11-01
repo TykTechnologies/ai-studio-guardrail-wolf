@@ -190,7 +190,7 @@ def test_a_policy_version_bump_starts_afresh(tmp_path):
 
 def test_response_calls_are_scoped_to_the_llm():
     assert storemod.tenant_of({"app_id": 0, "llm_id": 12}) == "llm:12"
-    assert storemod.tenant_of({"app_id": 406, "llm_id": 12}) == "app:406"
+    assert storemod.tenant_of({"app_id": 7, "llm_id": 12}) == "app:7"
     a = Item("tool_result", "x", 0, "shell")
     assert storemod.item_key("v", "app:1", a) != storemod.item_key("v", "app:2", a)
     assert storemod.item_key("v", "app:1", a) != storemod.item_key("w", "app:1", a)

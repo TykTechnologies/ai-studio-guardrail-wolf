@@ -99,9 +99,9 @@ default_app:
 # For example, score a code-review agent on every stage and skip an app that only
 # sends structured prompts with no tools.
 apps: {}
-#  "<code review agents app id>":
+#  "<code-review agent app id>":
 #    system_context: "A code-review agent for public GitHub repositories. It reads pull requests with shell, read and edit tools and comments on them."
-#  "<oel app id>":
+#  "<structured-prompt app id>":
 #    skip: true
 
 stages:
