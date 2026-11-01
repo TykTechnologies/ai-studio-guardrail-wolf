@@ -41,6 +41,12 @@ What the gateway sends, and what that means here:
   enforcement (below) it must be off (`"cache": false`): it would keep the
   first "not scored yet" answer.
 - **Response calls** carry `app_id` 0, so verdicts are scoped to the LLM there.
+- **Trusted prompt templates.** With the filter's connection setting
+  `templates: "true"`, a user message that matched an approved template
+  arrives as its residual plus a `template` (the full text and the approved
+  byte ranges); the response lists the segments handled in
+  `templates_handled`, and the full-text backstop's findings carry
+  `"backstop": true`. See [TEMPLATES.md](TEMPLATES.md).
 
 ## Scoring
 
@@ -58,7 +64,11 @@ calibrated option probabilities. Each stage asks its own questions
 
 - **Windows.** Content is cut into 512-token windows with 64 overlapping;
   every window and question of a call goes through the model in batched
-  forwards, and per question the riskiest window decides. Windows are both
+  forwards. With `agree: window` (the default policy) the deciding questions
+  must reach a tier together in one window; otherwise per question the
+  riskiest window decides. On long content each question's peak can sit in a
+  different window, and the false-positive rate of per-question peaks grows
+  with the number of windows. Windows are both
   cheaper than whole long texts and better separated: long benign texts
   score lower as windows, injections do not.
 - **Decisions.** Per question, `review` and `block` thresholds (and
@@ -72,12 +82,27 @@ calibrated option probabilities. Each stage asks its own questions
   manipulation. Per app, `user_messages: untrusted` scores such a message
   with the tool-result questions in a `TOOL OUTPUT` block labelled
   `untrusted_source`, and only the critical tier blocks.
+- **Tool sources.** Repository files, code search and shell output hold
+  prompt templates, tool catalogs and agent docs that read as instructions.
+  With `tool_sources`, such local output stops a conversation only when the
+  agreeing window also carries an attack's working parts (a corroborating
+  `content.*` rule: role tokens, fake system tags, an HTML comment addressed to
+  the AI, a credentials path, `curl | sh`, secrets sent to an address, an
+  override phrase); otherwise it is removed (`block`). Outside data (web
+  pages, tickets, MCP tools, unknown tools) keeps the full tiers.
+- **Read-only tool calls.** Exfiltration and reversibility do not decide a
+  call that only reads (a read-only tool, or a shell command made only of
+  read-only programs): reading cannot send anything anywhere. Alignment still
+  decides, and the secret-access and exfiltration rules still apply.
 - **Pre-checks** run before the model on every segment: bidirectional
   controls, invisible characters, Unicode tag characters (their hidden text
   is revealed to the model) and spoofed scene headers are flagged. On tool
   calls, canary tokens and **secret access** (`/proc/*/environ`, `.env`,
   `~/.ssh`, cloud credential files, `$GITHUB_TOKEN`-style variables, `env`,
-  `printenv`) are critical without the model.
+  `printenv`) and **shell exfiltration** (a file or the environment piped or
+  posted to `curl`, `wget`, `nc`, `ssh`, `scp` and the like) are critical
+  without the model. Tool definitions on the policy's allowlist are answered
+  clean.
 
 ## Findings
 

@@ -48,6 +48,31 @@ gateway drops findings below it; the policy holds the real thresholds).
   the action to unscanned text whatever the fail mode, so an outage blocks
   tool results and passes the rest of a small request.
 
+## Trusted prompt templates
+
+An app that wraps third-party text in its own instructions (a PR-review bot's
+prompt around a diff) can have its template approved in AI Studio, so that
+only the parts that vary are scored. For the guardrail to receive templates,
+the filter's HTTP connection must set `"templates": "true"`:
+
+```json
+"connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-11-02.1",
+               "api_key": "$SECRET/WOLFGUARD_TOKEN", "templates": "true"}
+```
+
+Then the guardrail scores the residual and, in the same call, the full text as
+a backstop, and acknowledges each templated segment it handled
+(`templates_handled`). Without the setting, the gateway sends only the residual
+and makes a second call with the full text for the backstop.
+
+The filter's `template_backstop` sets what the backstop does: `log` (default)
+records what only the full text shows; `enforce` acts on it; `off` skips it
+(except for a message over the gateway's exemption cap, always enforced).
+**Use `enforce` for apps facing untrusted authors**, such as pull request text
+anyone on GitHub can write: the residual alone can miss an attack that scoring
+the full message catches, and the enforced backstop catches it again
+([TEMPLATES.md](TEMPLATES.md)).
+
 ## 1. Shadow (log only)
 
 Everything logged in the background, traffic never delayed or changed. Run
@@ -56,7 +81,7 @@ it for a couple of weeks and review the decisions before enforcing.
 ```json
 {
   "provider": "http",
-  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-10-20.2", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
+  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-11-02.1", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
   "detectors": [
     {"name": "tool_result.critical", "threshold": 0.01}, {"name": "tool_result.block", "threshold": 0.01}, {"name": "tool_result.review", "threshold": 0.01},
     {"name": "user_message.block", "threshold": 0.01}, {"name": "user_message.review", "threshold": 0.01},
@@ -96,7 +121,7 @@ Filters run in their attached order on an LLM: put A before B.
 ```json
 {
   "provider": "http",
-  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-10-20.2", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
+  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-11-02.1", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
   "detectors": [{"name": "tool_result.critical", "threshold": 0.01}, {"name": "user_message.block", "threshold": 0.01}],
   "scope": "last_user",
   "on_detect": "block",
@@ -114,7 +139,7 @@ Filters run in their attached order on an LLM: put A before B.
 ```json
 {
   "provider": "http",
-  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-10-20.2", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
+  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-11-02.1", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
   "detectors": [{"name": "tool_result.block", "threshold": 0.01}],
   "on_detect": "log",
   "tool_results": {"on_detect": "quarantine"},
@@ -132,7 +157,7 @@ Filters run in their attached order on an LLM: put A before B.
 ```json
 {
   "provider": "http",
-  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-10-20.2", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
+  "connection": {"endpoint": "unix:///run/wolfguard/wolfguard.sock", "path": "/v1/classify?policy=2026-11-02.1", "api_key": "$SECRET/WOLFGUARD_TOKEN"},
   "detectors": [{"name": "tool_call.block", "threshold": 0.01}],
   "on_detect": "log",
   "tool_calls": {"scan": true, "on_detect": "block"},

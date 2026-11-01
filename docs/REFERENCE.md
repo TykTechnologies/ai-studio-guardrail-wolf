@@ -23,6 +23,12 @@ stays in use, and `wolfguard_policy_invalid` is 1 until it is fixed.
 | `limits.max_segment_chars` | 40000 | A segment longer than this is refused with 413 (the gateway sends at most 32,768 per piece) |
 | `limits.max_segments` | 4096 | A call with more segments is refused with 413 |
 | `rules.secret_access` | true | The secret-access rule on tool calls (below) |
+| `rules.shell_exfil` | true | The shell-exfiltration rule on tool calls (below) |
+| `tool_sources.local` | none (every tool result external) | Tool names (`fnmatch` patterns) whose output is the repository checkout. A local result reaches the critical tier only when the window where the questions agree also breaks one of `corroborate`; otherwise it is `block`. Any other tool, unknown tools included, and an untrusted user message keep the full tiers |
+| `tool_sources.external_markers` | `[]` | Regexes: a local result whose text matches one counts as outside data (a ticket URL, `gh api` JSON) |
+| `tool_sources.corroborate` | `[]` | The pre-check rules that corroborate a local hit: any of the `content.*` rules, `unicode.tags`, `unicode.bidi`, `unicode.invisible`, `scene.header_spoof` |
+| `tool_definitions.allow_sha256` | `[]` | SHA-256 digests of tool definitions answered clean without scoring (your agents' own tools; the digest is in the decision log) |
+| `tool_definitions.builtin_names` | `[]` | Built-in tool names: a definition of one whose digest is not listed (a client upgrade changed its text) is at most `review`, never removed |
 | `canaries` | `[]` | Strings that must never appear in a tool call: a call carrying one is critical without the model |
 | `tools` | | Plain-language descriptions of tools, by name, for the tool-call scene (`shell: Runs a shell command in the repository checkout.`); unknown tools get "Runs the NAME tool." |
 | `enforcement` | every stage inline | How each stage is enforced (below) |
@@ -38,7 +44,7 @@ stays in use, and `wolfguard_policy_invalid` is 1 until it is fixed.
 | `skip` | false | Answer clean without scoring or waiting for a worker (counted in `wolfguard_skipped_total{reason="app_skip"}`) |
 | `stages` | all four | The stages scored for this app |
 | `enforcement` | | Merged over the top-level `enforcement` |
-| `user_messages` | `standard` | `untrusted`: score the user message as untrusted content (the `tool_result` questions), and block only at the critical tier. For bots whose user turn is a runner's prompt around untrusted text |
+| `user_messages` | `standard` | `untrusted`: score the user message as untrusted content (the `tool_result` questions), and block only at the critical tier. For bots whose user turn is a runner's prompt around untrusted text. A message that matched a trusted prompt template is scored the same way, as its residual ([TEMPLATES.md](TEMPLATES.md)) |
 | `untrusted_source` | `message` | The label of that content in the scene (for example `github_comment`, `github_issue`) |
 
 ### Enforcement
@@ -72,6 +78,9 @@ enforcement:
 | `questions` | required | The questions asked, by name (below) |
 | `window` | `{tokens: 512, overlap: 64}` | Content is cut into windows of this many tokens, overlapping; per question the riskiest window decides |
 | `block_when` | `any` | `all`: every deciding question must reach its block threshold (else review); `any`: one is enough |
+| `agree` | `item` | With `block_when: all`: `window` requires the deciding questions to reach a tier together in one window; `item` lets each question's riskiest window count wherever it is (the 0.1 behaviour) |
+| `critical_by_windows` | none | `{N: threshold}`: an item of N or more windows needs this score (or the question's own `critical`, if higher) to reach the critical tier. Off by default: injections planted in long content score just under such thresholds |
+| `read_only_tools` | `[]` | `tool_call`: tools that only read, whatever their arguments. A shell command made only of read-only programs (`cat`, `grep`, `sed -n`, `git log`, `gh pr view`, `gh api` GET, ...; no redirect or substitution) is read-only too |
 | `with_tool_call` | true | `tool_result`: add a name-only tool-call block to the scene |
 | `goal_tokens` | 512 | `tool_call`: the user's goal is clipped to this many tokens (head and tail) |
 | `paste.min_chars`, `paste.questions` | 2000 | `user_message`: pasted content (fenced, quoted or long) is also scored as untrusted with these questions |
@@ -103,6 +112,7 @@ content.role:
 | `review`, `block` | Thresholds on the attack-side probability, `0 < review <= block <= 1` |
 | `critical` | Optional, `>= block`: the top tier (`<stage>.critical`), for a filter that ends a conversation where `block` only quarantines |
 | `decides` | false: reported, never decides |
+| `read_only` | `decide` (default) or `report`: `tool_call` only; on a read-only call a `report` question is reported and does not decide |
 
 `instruction.handling` is refused: the model answers it the same way whatever
 the input.
@@ -111,7 +121,7 @@ the input.
 
 | Decision | When | Detector a filter sees |
 |---|---|---|
-| `critical` | the deciding questions with a `critical` threshold all reach it (by `block_when`), or a hard rule (canary, secret access) | `<stage>.critical`, or the highest lower level the filter names |
+| `critical` | the deciding questions with a `critical` threshold all reach it (by `block_when` and `agree`; for a local tool result, in a corroborated window), or a hard rule (canary, secret access, shell exfiltration) | `<stage>.critical`, or the highest lower level the filter names |
 | `block` | the deciding questions reach `block` (by `block_when`) | `<stage>.block` (or `review` if that is all it names) |
 | `review` | any deciding question reaches `review` | `<stage>.review` |
 | `allow` | otherwise | none |
@@ -129,6 +139,9 @@ For `user_messages: untrusted` apps, a `block` user message is reported as
 | `scene.header_spoof`: a line that would pass for a scene block header | flag |
 | `canary.leak`: a configured canary in a tool call | critical |
 | `secret.path`: a tool call naming a credentials file (`/proc/*/environ`, `.env` except `.env.example`-style files, `~/.ssh`, `id_rsa` and friends, `.aws/credentials`, gcloud and Azure credentials, `.kube/config`, `.docker/config.json`, `gh/hosts.yml`, `.git-credentials`, `.netrc`, `.npmrc`, `.pypirc`, `/run/secrets/`, `/etc/shadow`) | critical |
+| `exfil.shell`: a shell tool call that reads a file or the environment (`cat`, `head`, `tail`, `base64`, `xxd`, `tar`, `env`, `printenv`, `set`, a secret `$VAR`, `<file`) and sends it over the network (`curl`, `wget`, `nc`, `ncat`, `socat`, `ssh`, `scp`, `rsync`, `/dev/tcp`) through a pipe, `$(...)` or backticks, `-d @file`, `--data-binary @-`, `-F x=@file`, `-T file`, `--post-file` or `--body-file`. Quoting, paths, `env X=`, `sudo`, `xargs`, `sh -c`, `bash -c`, `eval` and multi-line scripts are seen through; heredoc bodies are literal. Decided inline even on a deferred stage | critical |
+| `content.override`, `content.addressed`, `content.conceal`, `content.secret_path`, `content.remote_exec`, `content.exfil_sink`, `content.role_tokens`, `content.fake_tags`, `content.hidden_comment`: in a tool result or user message, an override phrase, text addressed to the AI, hiding something from the user, a credentials path, a download piped to a shell, secrets sent to an address, chat-template role tokens, fake system/tool tags, an HTML comment addressed to the AI | flag (corroboration, `tool_sources`) |
+| `template.invalid`, `template.mimicry`: a trusted template that failed validation (scored whole); a slot holding 32 bytes of the template | flag |
 | `secret.env`: a tool call reading a secret variable (`$GITHUB_TOKEN`, `$*_API_KEY`, `$*_SECRET`, `$INPUT_*`, ...) or dumping the environment (`env`, `printenv`, `export -p`, `process.env`, `os.environ`) | critical |
 
 ## Environment variables
@@ -201,13 +214,21 @@ The same store operations from inside a container:
 One JSON line per scored segment:
 
 ```json
-{"ts": 1792496674.5, "request_id": "", "app_id": 406, "llm_id": 12, "direction": "request",
+{"ts": 1792496674.5, "request_id": "", "app_id": 7, "llm_id": 12, "direction": "request",
  "stage": "tool_result", "tool_name": "read", "segment_index": 3, "decision": "block",
- "sha256": "…", "policy_version": "2026-10-20.2", "skipped": null,
+ "sha256": "…", "policy_version": "2026-11-02.1", "skipped": null,
  "scores": {"injection.indirect_presence": 0.982, "content.role": 0.913}, "rules": [],
  "windows": 4, "cached_windows": 0, "latency_ms": 141.2, "chars": 6210,
  "model_revision": "5ed7c44d…", "lane": "large", "mode": "inline"}
 ```
+
+Multi-window items add `peaks` (each question's riskiest window) and
+`window` (the one that decided; previews start there). Tool results add
+`source` (`local` or `external`) and, for a corroborated local hit,
+`corroborated`; read-only tool calls `read_only: true`. A templated message
+adds `template` (`id@version`, `exempt_share`, the backstop mode, its windows
+scored and skipped, its decision, scores and whether it was reported), and a
+refused one `template_invalid` (the reason).
 
 Lines with `"from_store": true` record a request stopped by a stored flag;
 `"decision": "unscanned"` an item not scored in time. Previews, when on,
