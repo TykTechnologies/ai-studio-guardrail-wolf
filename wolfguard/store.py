@@ -51,6 +51,13 @@ def text_sha256(text: str) -> str:
 def item_key(policy_version: str, tenant: str, item) -> str:
     """The store key of a scoring item (segments.Item)."""
     parts = [policy_version, tenant, item.stage, item.tool_name, item.text, item.goal, item.system]
+    tpl = getattr(item, "template", None)
+    if tpl is not None:
+        # A template's id, version, backstop mode and full text: a changed template is scored again,
+        # and a verdict on a residual is never answered for the message unmatched.
+        parts.append(tpl.key())
+    elif getattr(item, "template_invalid", ""):
+        parts.append(["template.invalid"])
     return hashlib.sha256(json.dumps(parts, ensure_ascii=False).encode()).hexdigest()
 
 

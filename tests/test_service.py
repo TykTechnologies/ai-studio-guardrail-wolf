@@ -59,7 +59,7 @@ def body(*segs, app_id=3, direction="request"):
             "meta": {"vendor": "openai", "model": "gpt-4.1", "is_chat": False, "llm_id": 7, "app_id": app_id, "request_id": "r-1"}}
 
 
-def tr(text, name="shell", cid="call_1"):
+def tr(text, name="webfetch", cid="call_1"):   # outside data: the full tiers (local tools: tests/test_tuning.py)
     return {"role": "tool", "kind": "tool_result", "tool_name": name, "tool_call_id": cid, "text": text}
 
 

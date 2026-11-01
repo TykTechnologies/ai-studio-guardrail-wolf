@@ -54,7 +54,8 @@ def test_ordinary_calls_pass(args):
 def test_only_tool_calls_and_switchable():
     text = json.dumps({"targets": ["/proc/self/environ"]})
     assert [r.name for r in check("tool_call", text).rules] == ["secret.path"]
-    assert check("tool_result", text).rules == ()                 # reading about it is not doing it
+    # Reading about it is not doing it: in content it is only a flag (a corroborating signal).
+    assert [(r.name, r.severity) for r in check("tool_result", text).rules] == [("content.secret_path", "flag")]
     assert check("tool_call", text, secrets=False).rules == ()
 
 

@@ -59,7 +59,7 @@ from wolfguard import precheck
 from wolfguard import store as storemod
 from wolfguard.pool import BACKGROUND, INLINE, Abandoned, Lane, ProcessWorker, Saturated, ThreadWorker, WorkerFailed
 from wolfguard.redact import redact
-from wolfguard.scorer import ALLOW, BLOCK, CRITICAL, RANK
+from wolfguard.scorer import ALLOW, BLOCK, CRITICAL, RANK, deciding_window
 from wolfguard.segments import STAGES, stage_of, type_call
 
 log = logging.getLogger("wolfguard")
@@ -249,8 +249,47 @@ def finding_for(stage: str, segment_index: int, verdict: dict, requested) -> dic
             "severity": "warning" if level == "review" else "critical", "segment_index": segment_index}
 
 
+def respond(findings: list, templated: bool, handled: set) -> JSONResponse:
+    """The classify response. A call that carried templated segments acknowledges the
+    ones the sidecar handled (validated, residual scored, backstop run or deliberately
+    off): "templates_handled": [segment index, ...]. The gateway makes its own full-text
+    backstop call for any templated segment not listed. Kept in one place: the ack's
+    shape may move to a per-segment field."""
+    out = {"flagged": bool(findings), "findings": findings}
+    if templated:
+        out["templates_handled"] = sorted(handled)
+    return JSONResponse(out)
+
+
+def backstop_verdict(r) -> dict | None:
+    """A template's backstop finding: what the full text shows above what the residual
+    did (the same span is not counted twice), within the template's backstop_min_score
+    when enforced. Under enforce, a full text over the size limit is unscanned."""
+    tpl = r.item.template
+    if tpl is None or tpl.backstop == "off":
+        return None
+    if r.backstop_unscanned:
+        return {"decision": UNSCANNED, "label": "unscanned", "score": 1.0} if tpl.backstop == "enforce" else None
+    b = r.backstop
+    if b is None or b.decision == ALLOW or RANK[b.decision] <= RANK[r.decision]:
+        return None
+    label, a = max(b.answers.items(), key=lambda qa: qa[1].risk)
+    score = round(a.risk, 4)
+    if tpl.backstop == "enforce" and tpl.min_score is not None and score < tpl.min_score:
+        return None
+    return {"decision": b.decision, "label": label, "score": score}
+
+
 def verdict_of(r) -> dict:
-    """What is kept of a scored item: its decision and the deciding question."""
+    """What is kept of a scored item: its decision and the deciding question
+    (and a template's backstop finding, when there is one)."""
+    bv = backstop_verdict(r)
+    if bv is not None:
+        return dict(_primary(r), backstop=bv)
+    return _primary(r)
+
+
+def _primary(r) -> dict:
     if r.decision == ALLOW:
         return {"decision": ALLOW}
     deciding = list(r.answers.items()) + [("paste:" + k, v) for k, v in r.paste.items()]
@@ -454,7 +493,7 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                 if st and st not in stages:
                     metrics.skipped.labels("app_skip" if app.skip else "not_requested" if st not in requested else "stage_off").inc()
             if not any(stage_of(s) for s in kept):
-                return JSONResponse({"flagged": False, "findings": []})
+                return respond([], any(isinstance(s.get("template"), dict) for s in dicts), set())
             segs = kept
             body = dict(body, segments=kept)
         meta = body.get("meta") or {}
@@ -478,6 +517,7 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
             k = storemod.item_key(version, tenant, it) if verdicts is not None else f"#{it.segment_index}"
             keyed.setdefault(k, []).append(it)
         decided: dict[str, dict] = {}
+        handled_keys: set[str] = set()     # verdicts from a scoring run or the store (not pending, busy or skipped)
         inline, deferred, waits = [], [], []
         for k, its in keyed.items():
             it = its[0]
@@ -485,15 +525,17 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                 v = verdicts.get(k, storemod.text_sha256(it.text))
                 if v is not None:
                     decided[k] = v
+                    handled_keys.add(k)
                     metrics.store.labels("allowed" if v.get("allowed") else "hit" if v.get("decision") == ALLOW else "hit_flagged").inc()
                     if v.get("decision") != ALLOW:
                         dlog.write(dict(base_rec(it, v["decision"]), from_store=True, label=v.get("label"), score=v.get("score")))
                     continue
                 metrics.store.labels("miss").inc()
             mode = enf.mode_of(it.stage, it.tool_name) if verdicts is not None else "inline"
-            if mode == "deferred" and it.stage == "tool_call" and pol.secret_rules and precheck.secret_access(it.text):
-                # A call that reads secrets is decided now, whatever the tool: deferring it
-                # would let the read happen.
+            if mode == "deferred" and it.stage == "tool_call" and (pol.secret_rules and precheck.secret_access(it.text)
+                                                                   or pol.exfil_rules and precheck.shell_exfil(it.text)):
+                # A call that reads secrets or sends data out is decided now, whatever the tool:
+                # deferring it would let it run.
                 mode = "inline"
             if mode == "inline":
                 inline.append(k)
@@ -535,6 +577,8 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                     metrics.skipped.labels(r.skipped).inc()
                 metrics.decisions.labels(r.item.stage, str(meta.get("app_id", "")), metrics.tool(r.item.tool_name), r.decision).inc()
                 v = verdict_of(r)
+                if r.skipped:
+                    v = dict(v, skipped=True)
                 out[k] = v
                 if verdicts is not None and not r.skipped:
                     verdicts.put(k, storemod.text_sha256(r.item.text), tenant, r.item.stage, v)
@@ -542,7 +586,33 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                            scores={q: round(a.risk, 4) for q, a in r.answers.items()} | {"paste:" + q: round(a.risk, 4) for q, a in r.paste.items()},
                            rules=[x.name for x in r.rules], windows=r.windows, cached_windows=r.cached, latency_ms=round(ms, 1),
                            chars=len(r.item.text), model_revision=pol_now.model_revision, lane=lane.name, mode=mode)
-                dlog.write(rec, r.item.text if dlog.preview and r.decision != ALLOW else "")
+                if r.windows > 1:
+                    rec["peaks"] = r.peaks
+                    rec["window"] = deciding_window(r)
+                if r.source:
+                    rec["source"] = r.source
+                if r.corroborated:
+                    rec["corroborated"] = list(r.corroborated)
+                if r.read_only:
+                    rec["read_only"] = True
+                if r.item.template_invalid:
+                    rec["template_invalid"] = r.item.template_invalid
+                tpl = r.item.template
+                if tpl is not None:
+                    t = {"id": tpl.ref, "exempt_share": round(tpl.exempt_share, 3), "backstop": tpl.backstop}
+                    if tpl.backstop != "off":
+                        t["backstop_windows"] = list(r.backstop_windows)      # [scored, skipped as approved text]
+                        if r.backstop is not None:
+                            t["backstop_decision"] = r.backstop.decision
+                            t["backstop_scores"] = {q: round(a.risk, 4) for q, a in r.backstop.answers.items()}
+                        if r.backstop_unscanned:
+                            t["backstop_unscanned"] = True
+                        if v.get("backstop"):
+                            t["backstop_finding"] = v["backstop"]["decision"]
+                    rec["template"] = t
+                # The preview starts at the window that decided, not at the segment's start.
+                shown = r.window_texts[deciding_window(r)] if r.window_texts else r.item.text
+                dlog.write(rec, shown if dlog.preview and r.decision != ALLOW else "")
             metrics.cache.labels("hit").inc(stats.cache_hits)
             metrics.cache.labels("miss").inc(stats.scenes - stats.cache_hits)
             return out
@@ -590,7 +660,9 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
             lane = lane_for(inline)
             try:
                 (results, stats), ms = await lane.run(sub_body(inline), doc, gone=request.is_disconnected, priority=INLINE)
-                decided.update(record(inline, results, stats, ms, lane, "inline"))
+                got = record(inline, results, stats, ms, lane, "inline")
+                decided.update(got)
+                handled_keys.update(k for k, v in got.items() if not v.get("skipped"))
                 stage_label = results[0].item.stage if results else "none"
                 metrics.latency.labels(stage_label, size_bucket(sum(len(keyed[k][0].text) for k in inline))).observe(ms / 1000)
             except Abandoned as e:
@@ -620,7 +692,10 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                     v = verdicts.get(k, storemod.text_sha256(keyed[k][0].text))
                 metrics.store.labels("pending_scored" if v is not None else "pending_open").inc()
                 decided[k] = v if v is not None else {"decision": ALLOW, "pending": True}
+                if v is not None and not v.get("skipped"):
+                    handled_keys.add(k)
 
+        handled = {it.segment_index for k in handled_keys for it in keyed[k] if it.template is not None}
         findings = []
         for k, its in keyed.items():
             v = decided.get(k) or {"decision": ALLOW}
@@ -628,7 +703,11 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                 f = finding_for(it.stage, it.segment_index, v, requested_detectors)
                 if f is not None:
                     findings.append(f)
-        return JSONResponse({"flagged": bool(findings), "findings": findings})
+                if v.get("backstop") and it.segment_index in handled:     # never a backstop mark on an unacknowledged segment
+                    fb = finding_for(it.stage, it.segment_index, v["backstop"], requested_detectors)
+                    if fb is not None:
+                        findings.append(dict(fb, backstop=True))
+        return respond(findings, any(isinstance(x.get("template"), dict) for x in dicts), handled)
 
     # The verdict store's operations over HTTP (the same as python -m wolfguard.store), for a
     # deployment with no shell into the container, such as the GPU image on a Runpod pod.

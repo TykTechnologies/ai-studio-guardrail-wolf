@@ -13,10 +13,17 @@ kind and role:
 Decoded views (a JSON unit's strings as "key\\nvalue" text) arrive as extra
 segments of the same kind and are scored like any segment; a finding on
 either flags the unit gateway-side.
+
+A user message that matched a trusted prompt template carries its residual
+as text and the template beside it (wolfguard/templates.py); the system
+context of such a message is its full text. A template on anything else
+(tool output, calls, definitions) is not honoured: the full text is scored.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+
+from wolfguard import templates as tplmod
 
 STAGES = ("tool_result", "tool_call", "user_message", "tool_definition")
 
@@ -34,6 +41,8 @@ class Item:
     system: str = ""        # user_message / tool_call: system context
     pasted: bool = False    # user_message: the pasted part, scored as untrusted content
     call: str = ""          # tool_result, eval only: the call with its arguments (full scene)
+    template: tplmod.Template | None = None   # user_message: a valid trusted template (text is its residual)
+    template_invalid: str = ""                # why a template sent with the segment was refused (its full text is scored)
 
 
 @dataclass
@@ -64,11 +73,19 @@ def type_call(body: dict) -> Typed:
     """Type a classify request body ({"direction", "segments", "meta", ...})."""
     out = Typed(direction=str(body.get("direction") or "request"), meta=dict(body.get("meta") or {}))
     segs = [s for s in body.get("segments") or [] if isinstance(s, dict)]
-    system = "\n\n".join(str(s.get("text") or "") for s in segs if not s.get("kind") and s.get("role") == "system").strip()
+    def full(s):
+        p = tplmod.parse(s)
+        return p.template.full_text if p.template else p.text
+
+    system = "\n\n".join(full(s) for s in segs if not s.get("kind") and s.get("role") == "system").strip()
     for s in segs:
         kind = s.get("kind") or ""
         role = s.get("role") or ""
-        text = str(s.get("text") or "")
+        parsed = tplmod.parse(s)
+        text, tpl, invalid = parsed.text, parsed.template, parsed.invalid
+        if tpl is not None and (kind or role != "user"):
+            # Templates are matched on a request's own messages only: elsewhere, the full text.
+            text, tpl, invalid = tpl.full_text, None, "not a user message"
         idx = int(s.get("index", 0))
         name = str(s.get("tool_name") or "")
         cid = str(s.get("tool_call_id") or "")
@@ -76,16 +93,17 @@ def type_call(body: dict) -> Typed:
             out.skip("empty")
             continue
         if kind == "tool_result":
-            out.items.append(Item("tool_result", text, idx, name, cid))
+            out.items.append(Item("tool_result", text, idx, name, cid, template_invalid=invalid))
         elif kind == "tool_call":
             ctx = s.get("context") or {}
-            out.items.append(Item("tool_call", text, idx, name, cid, goal=str(ctx.get("user_goal") or ""), system=str(ctx.get("system") or "")))
+            out.items.append(Item("tool_call", text, idx, name, cid, goal=str(ctx.get("user_goal") or ""), system=str(ctx.get("system") or ""),
+                                  template_invalid=invalid))
         elif kind == "tool_definition":
-            out.items.append(Item("tool_definition", text, idx, name))
+            out.items.append(Item("tool_definition", text, idx, name, template_invalid=invalid))
         elif kind:
             out.skip(f"kind:{kind}")
         elif role == "user":
-            out.items.append(Item("user_message", text, idx, system=system))
+            out.items.append(Item("user_message", text, idx, system=system, template=tpl, template_invalid=invalid))
         elif role == "system":
             out.skip("system_context")
         else:

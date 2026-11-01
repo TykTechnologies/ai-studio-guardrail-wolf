@@ -10,8 +10,36 @@ Per question:
     critical      optional, >= block: the top tier (tool_result.critical), for a filter that ends the
                   conversation where block only quarantines
     decides       false: reported, never decides (signal only). Default true.
+    read_only     tool_call: decide (default) | report: on a read-only call (a read-only
+                  tool, or a shell command made only of read-only programs, precheck.py)
+                  the question is reported and does not decide. A call that only reads
+                  cannot leak or change anything by itself.
 
-Per stage: questions, window {tokens, overlap}, and stage options.
+Per stage: questions, window {tokens, overlap}, and stage options:
+    block_when    any | all: one deciding question at a tier decides, or every one must
+    agree         item (default) | window: with block_when all, whether the questions may
+                  peak in different windows of a long item (item: the riskiest window per
+                  question) or must reach the tier together in one window (window)
+    read_only_tools  tool_call: tools that only read, whatever their arguments
+    critical_by_windows  optional {N: threshold}: an item of N or more windows needs this
+                  (or the question's own critical, if higher) to reach the critical tier.
+                  Each window is another chance for ordinary text to score high, so a
+                  stop on a long item asks for more (the max over N windows: 1-(1-p)^N)
+
+tool_sources (optional): where a tool's output comes from. Tools named in
+`local` (fnmatch patterns) return the repository checkout; any other tool
+is external (unknown tools too), and so is an untrusted user message. A
+local result whose text matches one of `external_markers` (regexes: an
+Atlassian URL in a saved ticket, gh api JSON) counts as external. A local
+result reaches the critical tier only when the window where the questions
+agree also breaks one of the `corroborate` rules (precheck.content_signals);
+otherwise it is a block (the result is removed, the conversation goes on).
+
+tool_definitions (optional): `allow_sha256`, definitions of our own clients
+answered clean without scoring (the SHA-256 of the definition text, as in
+the decision log); `builtin_names`, the agents' built-in tool names: one
+whose hash is not listed (a client upgrade) is reported (review), never
+removed. Any other definition (MCP servers, unknown) is scored as before.
 Per app (meta.app_id): system_context, skip (answer clean without scoring),
 stages (the stages scored for the app; default all), enforcement (merged
 over the top-level one), user_messages (standard | untrusted) and
@@ -44,11 +72,14 @@ pending_min_age   only scoring started at least this many seconds ago is waited 
 """
 from __future__ import annotations
 
+import fnmatch
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
 
+from wolfguard import precheck
 from wolfguard.segments import STAGES
 
 FORBIDDEN_CONCEPTS = {"instruction.handling"}  # always the same answer (model card)
@@ -71,6 +102,7 @@ class Question:
     review: float
     decides: bool = True
     critical: float | None = None
+    read_only: str = "decide"       # tool_call: decide | report on a read-only call
 
     def risk_of(self, probs: list[float]) -> float:
         return sum(p for i, p in zip(self.option_ids, probs) if i in self.risk)
@@ -88,6 +120,16 @@ class Stage:
     goal_tokens: int = 512            # tool_call: goal clipped (head + tail)
     full_scene: bool = False          # tool_result, eval only: [USER GOAL] + the call with arguments
     block_when: str = "any"           # any: one deciding question at block decides; all: every one must (else review)
+    agree: str = "item"               # block_when all: item (per-question peaks) | window (together in one window)
+    read_only_tools: tuple[str, ...] = ()   # tool_call: tools that only read
+    critical_by_windows: tuple[tuple[int, float], ...] = ()   # (min windows, critical threshold), ascending
+
+    def critical_for(self, q: "Question", windows: int) -> float:
+        t = q.critical
+        for n, c in self.critical_by_windows:
+            if windows >= n:
+                t = max(t, c)
+        return t
 
 
 MODES = ("inline", "deferred")
@@ -131,6 +173,24 @@ class App:
 
 
 @dataclass(frozen=True)
+class ToolSources:
+    local: tuple[str, ...] = ()
+    external_markers: tuple[str, ...] = ()
+    corroborate: tuple[str, ...] = ()
+
+    def is_local(self, tool: str, text: str) -> bool:
+        if not any(fnmatch.fnmatchcase(tool, p) for p in self.local):
+            return False
+        return not any(re.search(m, text, re.IGNORECASE) for m in self.external_markers)
+
+
+@dataclass(frozen=True)
+class ToolDefinitions:
+    allow_sha256: frozenset = frozenset()
+    builtin_names: frozenset = frozenset()
+
+
+@dataclass(frozen=True)
 class Policy:
     version: str
     model_revision: str
@@ -142,6 +202,9 @@ class Policy:
     max_segment_chars: int = 40000
     max_segments: int = 64
     secret_rules: bool = True      # precheck secret.path / secret.env on tool calls (decided without the model)
+    exfil_rules: bool = True       # precheck exfil.shell on tool calls (decided without the model)
+    tool_sources: ToolSources | None = None     # None: every tool result is external
+    tool_definitions: ToolDefinitions = ToolDefinitions()
 
     def app(self, app_id) -> App:
         return self.apps.get(str(app_id), self.default_app) if app_id not in (None, "", 0) else self.default_app
@@ -185,7 +248,10 @@ def _question(name: str, q: dict) -> Question:
         critical = float(critical)
         if not block <= critical <= 1:
             raise PolicyError(f"{name}: need block <= critical <= 1")
-    return Question(name, kind, instr, ids, texts, risk, block, review, bool(q.get("decides", True)), critical)
+    ro = str(q.get("read_only", "decide"))
+    if ro not in ("decide", "report"):
+        raise PolicyError(f"{name}: read_only must be decide or report")
+    return Question(name, kind, instr, ids, texts, risk, block, review, bool(q.get("decides", True)), critical, ro)
 
 
 def _enforcement(d, base: Enforcement | None = None) -> Enforcement:
@@ -218,6 +284,17 @@ def _enforcement(d, base: Enforcement | None = None) -> Enforcement:
     return Enforcement(tuple(sorted(stages.items())), wait, age)
 
 
+def _by_windows(stage: str, d) -> tuple:
+    if not d:
+        return ()
+    if not isinstance(d, dict):
+        raise PolicyError(f"{stage}: critical_by_windows must map a window count to a threshold")
+    out = tuple(sorted((int(n), float(c)) for n, c in d.items()))
+    if any(n < 1 or not 0 < c <= 1 for n, c in out):
+        raise PolicyError(f"{stage}: critical_by_windows needs window counts >= 1 and thresholds in (0, 1]")
+    return out
+
+
 def parse(doc: dict) -> Policy:
     if not isinstance(doc, dict) or "stages" not in doc:
         raise PolicyError("a policy needs version, model_revision and stages")
@@ -233,14 +310,41 @@ def parse(doc: dict) -> Policy:
         bw = s.get("block_when", "any")
         if bw not in ("any", "all"):
             raise PolicyError(f"{name}: block_when must be any or all")
+        agree = s.get("agree", "item")
+        if agree not in ("item", "window"):
+            raise PolicyError(f"{name}: agree must be item or window")
         stages[name] = Stage(name, qs, int(w.get("tokens", 512)), int(w.get("overlap", 64)),
                              bool(s.get("with_tool_call", True)), int((s.get("paste") or {}).get("min_chars", 2000)), paste,
-                             int(s.get("goal_tokens", 512)), block_when=bw)
+                             int(s.get("goal_tokens", 512)), block_when=bw, agree=agree,
+                             read_only_tools=tuple(str(t) for t in s.get("read_only_tools") or ()),
+                             critical_by_windows=_by_windows(name, s.get("critical_by_windows")))
         st = stages[name]
         if not 0 <= st.window_overlap < st.window_tokens:
             raise PolicyError(f"{name}: need 0 <= overlap < window tokens")
 
     enforcement = _enforcement(doc.get("enforcement"))
+
+    sources = None
+    if doc.get("tool_sources") is not None:
+        ts = doc["tool_sources"]
+        if not isinstance(ts, dict):
+            raise PolicyError("tool_sources must be a mapping")
+        for m in ts.get("external_markers") or ():
+            try:
+                re.compile(m)
+            except re.error as e:
+                raise PolicyError(f"tool_sources.external_markers: {m!r}: {e}") from None
+        known = set(precheck.CONTENT) | {"unicode.tags", "unicode.bidi", "unicode.invisible", "scene.header_spoof"}
+        bad = [r for r in ts.get("corroborate") or () if r not in known]
+        if bad:
+            raise PolicyError(f"tool_sources.corroborate: unknown rule {bad[0]!r} (one of {sorted(known)})")
+        sources = ToolSources(tuple(str(t) for t in ts.get("local") or ()), tuple(str(m) for m in ts.get("external_markers") or ()),
+                              tuple(str(r) for r in ts.get("corroborate") or ()))
+    td = doc.get("tool_definitions") or {}
+    hashes = frozenset(str(h).lower() for h in td.get("allow_sha256") or ())
+    if any(not re.fullmatch(r"[0-9a-f]{64}", h) for h in hashes):
+        raise PolicyError("tool_definitions.allow_sha256: SHA-256 hex digests only")
+    defs = ToolDefinitions(hashes, frozenset(str(n) for n in td.get("builtin_names") or ()))
 
     def app(d):
         d = d or {}
@@ -261,7 +365,9 @@ def parse(doc: dict) -> Policy:
         tools={str(k): str(v) for k, v in (doc.get("tools") or {}).items()},
         max_segment_chars=int((doc.get("limits") or {}).get("max_segment_chars", 40000)),
         max_segments=int((doc.get("limits") or {}).get("max_segments", 64)),
-        secret_rules=bool((doc.get("rules") or {}).get("secret_access", True)))
+        secret_rules=bool((doc.get("rules") or {}).get("secret_access", True)),
+        exfil_rules=bool((doc.get("rules") or {}).get("shell_exfil", True)),
+        tool_sources=sources, tool_definitions=defs)
 
 
 def load(path: str | Path) -> Policy:
