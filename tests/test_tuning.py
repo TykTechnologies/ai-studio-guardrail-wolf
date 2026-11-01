@@ -147,7 +147,7 @@ def tc(args, name="shell"):
 def test_read_only_calls_are_not_decided_by_exfiltration(stub):
     p = policymod.parse({"version": "t", "model_revision": "r", "stages": {"tool_call": {"read_only_tools": ["read"], "questions": CALL_QS}}})
     s = Scorer(stub, p)
-    res, _ = s.score(call(tc(json.dumps({"command": "cat marketplace.json && gh pr view 4 RISK:exfiltration.presence"}))))
+    res, _ = s.score(call(tc(json.dumps({"command": "cat package.json && gh pr view 4 RISK:exfiltration.presence"}))))
     r = res[0]
     assert r.read_only and r.decision == ALLOW and r.answers["exfiltration.presence"].risk == 0.95   # reported, not deciding
     res, _ = s.score(call(tc('{"path": "README.md RISK:exfiltration.presence"}', "read")))
@@ -161,7 +161,7 @@ def test_read_only_calls_are_not_decided_by_exfiltration(stub):
 
 
 @pytest.mark.parametrize("cmd,ro", [
-    ('cd repo && echo "=== m ===" && cat .claude-plugin/marketplace.json && sed -n \'1,80p\' catalog/plugins.yaml', True),
+    ('cd repo && echo "=== m ===" && cat package.json && sed -n \'1,80p\' docs/index.md', True),
     ("gh pr view 512 --repo org/x --json title,body", True),
     ("grep -rn foo . 2>/dev/null | head -20", True),
     ("git log --oneline -5 && git diff HEAD~1 --stat", True),
@@ -184,13 +184,13 @@ def td(text, name):
 
 
 def test_known_definitions_are_answered_clean_and_builtins_never_removed(stub):
-    known = '{"name": "subagent", "description": "Spawns an agent. INJECT"}'
+    known = '{"name": "spawn_agent", "description": "Spawns an agent. INJECT"}'
     doc = {"version": "t", "model_revision": "r", "stages": {"tool_definition": {"questions": DEF_QS}},
-           "tool_definitions": {"allow_sha256": [store.text_sha256(known)], "builtin_names": ["subagent"]}}
+           "tool_definitions": {"allow_sha256": [store.text_sha256(known)], "builtin_names": ["spawn_agent"]}}
     s = Scorer(stub, policymod.parse(doc))
-    res, _ = s.score(call(td(known, "subagent")))
+    res, _ = s.score(call(td(known, "spawn_agent")))
     assert (res[0].decision, res[0].skipped) == (ALLOW, "allowlisted") and stub.forwards == 0
-    res, _ = s.score(call(td('{"name": "subagent", "description": "Spawns an agent, v2. INJECT"}', "subagent")))
+    res, _ = s.score(call(td('{"name": "spawn_agent", "description": "Spawns an agent, v2. INJECT"}', "spawn_agent")))
     assert res[0].decision == REVIEW                                       # a client upgrade: reported
     res, _ = s.score(call(td('{"name": "notes__add", "description": "Adds a note. INJECT"}', "notes__add")))
     assert res[0].decision == BLOCK                                        # an MCP definition: removed
@@ -199,7 +199,7 @@ def test_known_definitions_are_answered_clean_and_builtins_never_removed(stub):
 def test_allowlist_entries_are_validated():
     with pytest.raises(policymod.PolicyError):
         policymod.parse({"version": "t", "model_revision": "r", "stages": {"tool_definition": {"questions": DEF_QS}},
-                         "tool_definitions": {"allow_sha256": ["subagent"]}})
+                         "tool_definitions": {"allow_sha256": ["spawn_agent"]}})
 
 
 # ---- the decision log and the shipped policy --------------------------------------------------

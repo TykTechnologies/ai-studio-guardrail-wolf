@@ -35,7 +35,7 @@ result reaches the critical tier only when the window where the questions
 agree also breaks one of the `corroborate` rules (precheck.content_signals);
 otherwise it is a block (the result is removed, the conversation goes on).
 
-tool_definitions (optional): `allow_sha256`, definitions of our own clients
+tool_definitions (optional): `allow_sha256`, definitions of your own clients
 answered clean without scoring (the SHA-256 of the definition text, as in
 the decision log); `builtin_names`, the agents' built-in tool names: one
 whose hash is not listed (a client upgrade) is reported (review), never
