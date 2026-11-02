@@ -100,7 +100,9 @@ point them at a CPU guardrail on the gateway host until the pod is back.
   too large, 503 saturated, 499 abandoned), `wolfguard_skipped_total`,
   `wolfguard_store_total`, `wolfguard_deferred_total` (`dropped`: content
   left unscored until it is sent again), `wolfguard_busy_total`,
-  `wolfguard_denied_total`, `wolfguard_policy_invalid`,
+  `wolfguard_denied_total`, `wolfguard_store_errors_total` and
+  `wolfguard_log_errors_total` (alert on either rising: the volume is full or
+  failing), `wolfguard_policy_invalid`,
   `wolfguard_policy_version_mismatch_total`. On the gateway:
   `aistudio_guardrail_latency_seconds`, `aistudio_guardrail_errors_total`,
   `aistudio_guardrail_shadow_dropped_total`.

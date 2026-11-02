@@ -25,11 +25,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
 import sqlite3
 import sys
 import threading
 import time
+
+log = logging.getLogger("wolfguard")
 
 FLAGGED_TTL = 7 * 86400
 CLEAN_TTL = 86400
@@ -105,9 +108,11 @@ def journal_mode(path: str) -> str:
 
 
 class VerdictStore:
-    def __init__(self, path: str = ":memory:", flagged_ttl: float = FLAGGED_TTL, clean_ttl: float = CLEAN_TTL):
+    def __init__(self, path: str = ":memory:", flagged_ttl: float = FLAGGED_TTL, clean_ttl: float = CLEAN_TTL, on_error=None):
         self.path, self.flagged_ttl, self.clean_ttl = path, flagged_ttl, clean_ttl
         self._lock = threading.Lock()
+        # Called with the operation ("get", "put") when SQLite fails, e.g. a full or failing volume.
+        self.on_error = on_error or (lambda op: None)
         self.db = sqlite3.connect(path, check_same_thread=False, isolation_level=None, timeout=5)
         if path != ":memory:":
             self.journal = journal_mode(path)
@@ -117,15 +122,31 @@ class VerdictStore:
         self._purged = time.time()
 
     def get(self, key: str, sha: str) -> dict | None:
-        """The verdict for key, or None. An allowed hash reads as clean."""
+        """The verdict for key, or None. An allowed hash reads as clean. A store
+        that fails reads as a miss, so the text is scored instead of the call failing."""
         now = time.time()
-        with self._lock:
-            if self.db.execute("SELECT 1 FROM allows WHERE text_sha256 = ? AND expires > ?", (sha, now)).fetchone():
-                return {"decision": "allow", "allowed": True}
-            row = self.db.execute("SELECT verdict FROM verdicts WHERE key = ? AND expires > ?", (key, now)).fetchone()
+        try:
+            with self._lock:
+                if self.db.execute("SELECT 1 FROM allows WHERE text_sha256 = ? AND expires > ?", (sha, now)).fetchone():
+                    return {"decision": "allow", "allowed": True}
+                row = self.db.execute("SELECT verdict FROM verdicts WHERE key = ? AND expires > ?", (key, now)).fetchone()
+        except sqlite3.Error as e:
+            self._failed("get", e)
+            return None
         return json.loads(row[0]) if row else None
 
     def put(self, key: str, sha: str, tenant: str, stage: str, verdict: dict) -> None:
+        """Keeps a verdict. A store that fails drops it (counted, logged): the call still answers."""
+        try:
+            self._put(key, sha, tenant, stage, verdict)
+        except sqlite3.Error as e:
+            self._failed("put", e)
+
+    def _failed(self, op: str, e: Exception) -> None:
+        self.on_error(op)
+        log.warning("verdict store %s failed: %s", op, e)
+
+    def _put(self, key: str, sha: str, tenant: str, stage: str, verdict: dict) -> None:
         now = time.time()
         ttl = self.clean_ttl if verdict.get("decision") == "allow" else self.flagged_ttl
         with self._lock:

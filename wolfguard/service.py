@@ -85,6 +85,10 @@ class Settings:
     preview: bool = False               # log a truncated preview of flagged segments
     preview_chars: int = 200
     preview_log: str = ""               # previews in their own file (shorter retention); "" = in the decision line
+    # Each log file is rotated at log_max_mb (name.1 .. name.<log_keep>, oldest dropped), so the
+    # logs never fill the volume: at most (log_keep + 1) * log_max_mb per file. 0 = no rotation.
+    log_max_mb: float = 256
+    log_keep: int = 3
     reload_interval: float = 2.0
     debug_delay_ms: int = 0             # test only: delay every classify call
     # The verdict store (deferred enforcement): "" off, ":memory:", or a SQLite path on the log volume.
@@ -117,7 +121,8 @@ class Settings:
         for name, cast in (("large_workers", int), ("small_workers", int), ("threads", int), ("small_threads", int),
                            ("small_chars", int), ("queue_max", int), ("queue_wait", float), ("max_body_bytes", int),
                            ("preview_chars", int), ("reload_interval", float), ("debug_delay_ms", int),
-                           ("flagged_ttl", float), ("clean_ttl", float), ("bg_queue_max", int), ("bg_queue_wait", float)):
+                           ("flagged_ttl", float), ("clean_ttl", float), ("bg_queue_max", int), ("bg_queue_wait", float),
+                           ("log_max_mb", float), ("log_keep", int)):
             v = env.get("WOLFGUARD_" + name.upper())
             if v:
                 setattr(s, name, cast(v))
@@ -199,6 +204,8 @@ class Metrics:
         self.store = Counter("wolfguard_store_total", "Verdict store lookups", ["result"], registry=r)
         self.deferred = Counter("wolfguard_deferred_total", "Deferred (background) scoring per segment", ["outcome"], registry=r)
         self.busy = Counter("wolfguard_busy_total", "Segments that could not be scored in time, by when_busy", ["stage", "outcome"], registry=r)
+        self.store_errors = Counter("wolfguard_store_errors_total", "Verdict store operations that failed (scored or dropped instead)", ["op"], registry=r)
+        self.log_errors = Counter("wolfguard_log_errors_total", "Decision or preview log lines that could not be written", ["log"], registry=r)
         self._tools = set()
 
     def tool(self, name: str) -> str:
@@ -324,16 +331,49 @@ def size_bucket(chars: int) -> str:
     return "gt_6ktok"
 
 
+class RotatingFile:
+    """An append-only line file rotated by size: at max_bytes it becomes
+    name.1 (name.1 becomes name.2, ...; name.<keep> is dropped). max_bytes 0
+    never rotates."""
+
+    def __init__(self, path: str, max_bytes: int = 0, keep: int = 3):
+        self.path, self.max_bytes, self.keep = path, max_bytes, max(keep, 0)
+        self._f = open(path, "a", buffering=1)
+        self._size = self._f.tell()
+
+    def write(self, line: str) -> None:
+        if self.max_bytes and self._size and self._size + len(line) > self.max_bytes:
+            self._rotate()
+        self._f.write(line)
+        self._f.flush()
+        self._size += len(line.encode())
+
+    def _rotate(self) -> None:
+        self._f.close()
+        for i in range(self.keep, 0, -1):
+            src = self.path if i == 1 else f"{self.path}.{i - 1}"
+            if os.path.exists(src):
+                os.replace(src, f"{self.path}.{i}")
+        if self.keep == 0:
+            os.remove(self.path)
+        self._f = open(self.path, "a", buffering=1)
+        self._size = 0
+
+
 class DecisionLog:
     """One line per segment, never with text. Previews of flagged segments
     (behind the preview flag) go to a separate preview log when one is set,
-    so they can be kept for less time; without one, into the decision line."""
+    so they can be kept for less time; without one, into the decision line.
+    Files rotate by size; a line that cannot be written (a full or failing
+    volume) is dropped and counted, never failing the call."""
 
-    def __init__(self, target: str, preview: bool, preview_chars: int, preview_target: str = ""):
+    def __init__(self, target: str, preview: bool, preview_chars: int, preview_target: str = "",
+                 max_bytes: int = 0, keep: int = 3, on_error=None):
         self.preview, self.preview_chars = preview, preview_chars
         self._lock = threading.Lock()
-        self._f = sys.stdout if target == "-" else open(target, "a", buffering=1)
-        self.preview_log = open(preview_target, "a", buffering=1) if preview_target else None
+        self.on_error = on_error or (lambda which: None)
+        self._f = sys.stdout if target == "-" else RotatingFile(target, max_bytes, keep)
+        self.preview_log = RotatingFile(preview_target, max_bytes, keep) if preview_target else None
 
     def write(self, rec: dict, preview: str = ""):
         preview = redact(preview)[: self.preview_chars] if preview else ""
@@ -341,13 +381,20 @@ class DecisionLog:
             rec = dict(rec, preview=preview)
         line = json.dumps(rec, ensure_ascii=False, separators=(",", ":"))
         with self._lock:
-            self._f.write(line + "\n")
-            self._f.flush()
+            self._put(self._f, line, "decisions")
             if preview and self.preview_log is not None:
                 p = {"ts": rec["ts"], "sha256": rec["sha256"], "request_id": rec.get("request_id"), "app_id": rec.get("app_id"),
                      "stage": rec["stage"], "decision": rec["decision"], "preview": preview}
-                self.preview_log.write(json.dumps(p, ensure_ascii=False, separators=(",", ":")) + "\n")
-                self.preview_log.flush()
+                self._put(self.preview_log, json.dumps(p, ensure_ascii=False, separators=(",", ":")), "previews")
+
+    def _put(self, f, line: str, which: str) -> None:
+        try:
+            f.write(line + "\n")
+            if f is sys.stdout:
+                f.flush()
+        except OSError as e:
+            self.on_error(which)
+            log.warning("%s log write failed: %s", which, e)
 
 
 def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
@@ -355,8 +402,10 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
         raise SystemExit("wolfguard: no bearer token (set WOLFGUARD_TOKEN or WOLFGUARD_TOKEN_FILE)")
     metrics = Metrics()
     store = PolicyStore(settings.policy_path, on_reload=lambda ok: (metrics.reloads.labels("ok" if ok else "invalid").inc(), metrics.invalid.set(0 if ok else 1)))
-    dlog = DecisionLog(settings.decision_log, settings.preview, settings.preview_chars, settings.preview_log)
-    verdicts = storemod.VerdictStore(settings.store, settings.flagged_ttl, settings.clean_ttl) if settings.store else None
+    dlog = DecisionLog(settings.decision_log, settings.preview, settings.preview_chars, settings.preview_log,
+                       int(settings.log_max_mb * (1 << 20)), settings.log_keep, lambda which: metrics.log_errors.labels(which).inc())
+    verdicts = storemod.VerdictStore(settings.store, settings.flagged_ttl, settings.clean_ttl,
+                                     lambda op: metrics.store_errors.labels(op).inc()) if settings.store else None
     pending: dict[str, asyncio.Future] = {}     # store key -> its background scoring under way (.started: when)
     background: set = set()                     # running background tasks (kept referenced)
     if lanes is None:
