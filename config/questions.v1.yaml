@@ -1,5 +1,5 @@
 # Question sets per stage.
-# Concepts are Patronus's evaluated ones (model card, 27 concepts); wording
+# Concepts are Patronus Protect's evaluated ones (model card, 27 concepts); wording
 # follows the model card's examples. Never instruction.handling (always the
 # same answer). Content questions are asked without a [PROPOSED ACTION]
 # block; action questions with it.

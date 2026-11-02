@@ -1,7 +1,7 @@
 # ai-studio-guardrail-wolf
 
 A prompt-injection guardrail for [Tyk AI Studio](https://github.com/TykTechnologies/ai-studio)
-2.3 and later. It runs [Patronus AI's Wolf Defender Jev](https://huggingface.co/patronus-studio/wolf-defender-jev)
+2.3 and later. It runs [Wolf Defender Jev](https://huggingface.co/patronus-studio/wolf-defender-jev) by [Patronus Protect](https://patronus.studio/) (Casdo Labs GmbH)
 behind AI Studio's **HTTP guardrail provider** (Enterprise) and scores what an
 agent's traffic carries:
 
