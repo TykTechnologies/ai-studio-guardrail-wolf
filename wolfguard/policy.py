@@ -2,7 +2,7 @@
 
 Per question:
     type          noul | choice | score
-    instructions  the question (Patronus concept wording, paraphrase allowed)
+    instructions  the question (Patronus Protect concept wording, paraphrase allowed)
     criteria      noul: optional {"true", "false"} texts; choice: {id: description}; score: [levels, low to high]
     risk          which answer is the attack side: noul -> implicit (true);
                   choice -> an option id; score -> the list of levels that count
