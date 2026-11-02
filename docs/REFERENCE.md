@@ -164,6 +164,7 @@ For `user_messages: untrusted` apps, a `block` user message is reported as
 | `WOLFGUARD_DECISION_LOG` | `-` (standard output) | The decision log, one JSON line per scored segment |
 | `WOLFGUARD_PREVIEW`, `WOLFGUARD_PREVIEW_CHARS` | off, 200 | Previews of flagged segments (secrets masked) |
 | `WOLFGUARD_PREVIEW_LOG` | in the decision line | Previews in their own file, for a shorter retention |
+| `WOLFGUARD_LOG_MAX_MB`, `WOLFGUARD_LOG_KEEP` | 256, 3 | Each log file rotates at this size into `<name>.1` … `<name>.<keep>` (the oldest is dropped), so the decision and preview logs take at most (keep + 1) × max each. `0` never rotates |
 | `WOLFGUARD_LARGE_WORKERS`, `WOLFGUARD_THREADS` | 1, 4 (GPU: 2 workers) | Model workers for long content, and torch threads each |
 | `WOLFGUARD_SMALL_WORKERS`, `WOLFGUARD_SMALL_THREADS` | 1, 1 | Workers for short content |
 | `WOLFGUARD_SMALL_CHARS` | 1500 | A call with at most this many characters to score takes the small lane |
@@ -204,6 +205,8 @@ The same store operations from inside a container:
 | `wolfguard_store_total` | `result` | Verdict store lookups: `hit`, `hit_flagged`, `allowed`, `miss`, `pending_scored`, `pending_open` |
 | `wolfguard_deferred_total` | `outcome` | Background scoring: `queued`, `scored`, `dropped` |
 | `wolfguard_busy_total` | `stage`, `outcome` | Items not scored in time, by `when_busy` |
+| `wolfguard_store_errors_total` | `op` | Verdict store reads (`get`) and writes (`put`) that failed, e.g. on a full or failing volume. A failed read is scored as a miss and a failed write dropped, so the call still answers; flags are not kept while it rises |
+| `wolfguard_log_errors_total` | `log` | Decision (`decisions`) or preview (`previews`) log lines that could not be written and were dropped |
 | `wolfguard_denied_total` | `reason` | Allowlist refusals: `not_allowed`, `no_client_ip`, `not_via_proxy` |
 | `wolfguard_policy_reloads_total` | `result` | Policy reloads, `ok` or `invalid` |
 | `wolfguard_policy_invalid` | | 1 while the policy file on disk is invalid |

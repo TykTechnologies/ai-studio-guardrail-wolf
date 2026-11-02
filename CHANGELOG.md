@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.1
+
+A full or failing volume no longer takes the guardrail down.
+
+- **The logs rotate by size.** `decisions.jsonl` and `previews.jsonl` rotate at
+  `WOLFGUARD_LOG_MAX_MB` (default 256) into `.1` … `.<WOLFGUARD_LOG_KEEP>`
+  (default 3), so together they take at most 2 GiB. Before, they grew until the
+  volume was full.
+- **A store or log failure no longer fails the call.** When SQLite cannot read
+  or write the verdict store (`disk I/O error`, a full disk), the lookup is
+  scored as a miss and the write is dropped; a log line that cannot be written is
+  dropped. Before, the error failed `/v1/classify` with a 500, which a filter
+  treats as unscanned. New metrics: `wolfguard_store_errors_total{op}` and
+  `wolfguard_log_errors_total{log}`. While the store fails, deferred flags are
+  not kept, so alert on them.
+
 ## 0.2.0
 
 Fewer false stops on long content and on an agent's own repository, a
