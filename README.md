@@ -28,8 +28,9 @@ Images (public, with SBOM and build-provenance attestations; pin them by digest)
 
 - **Rules decided without the model.** A tool call that reads credentials
   (`/proc/*/environ`, `.env`, `~/.ssh`, cloud credential files, secret
-  environment variables) or carries a planted canary token is critical at
-  once, whatever the tool is called. Hidden text (Unicode tag characters,
+  environment variables), sends a file or the environment over the network
+  from a shell (`cat f | curl -d @-`, `scp f host:`), or carries a planted
+  canary token is critical at once, whatever the tool is called. Hidden text (Unicode tag characters,
   bidirectional controls, spoofed scene headers) is revealed to the model and
   flagged.
 - **Deferred enforcement for agents.** Agents resend their whole history on
@@ -39,8 +40,16 @@ Images (public, with SBOM and build-provenance attestations; pin them by digest)
   that conversation. User messages and shell, execute, write and edit calls
   are scored inline. False flags are lifted by hash.
 - **Windows, not truncation.** Long content is scored in 512-token windows
-  (64 overlapping), all windows and questions batched, the riskiest window
-  deciding.
+  (64 overlapping), all windows and questions batched; the questions must
+  agree within one window, so long benign text does not add up to a hit.
+- **Where the content came from.** Repository files and code search are full
+  of prompt templates and agent docs: their output stops a conversation only
+  when the hit is corroborated by an attack's working parts, else it is
+  removed. Read-only tool calls are not judged on exfiltration. Your agents'
+  own tool definitions can be allowlisted by hash.
+- **Trusted prompt templates.** With AI Studio's approved app templates, an
+  app's own instructions are left out and only the slots are scored, with the
+  full text as a backstop ([docs/TEMPLATES.md](docs/TEMPLATES.md)).
 - **Policy as code.** Thresholds, question sets, per-app system context,
   per-stage modes and kill switches live in a versioned YAML policy that is
   hot-reloaded.
@@ -75,6 +84,8 @@ anything: thresholds should be tuned on your own traffic.
 | [docs/REFERENCE.md](docs/REFERENCE.md) | every policy field, environment variable, endpoint, metric and decision-log field |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | the contract, stages and questions, decisions, enforcement modes, security model |
 | [docs/AI-STUDIO-FILTERS.md](docs/AI-STUDIO-FILTERS.md) | AI Studio filter configuration for shadow and enforcement |
+| [docs/TEMPLATES.md](docs/TEMPLATES.md) | trusted prompt templates: the residual, the full-text backstop, the acknowledgement |
+| [CHANGELOG.md](CHANGELOG.md) | what changed in each release, and what to check when upgrading |
 | [docs/DEPLOY.md](docs/DEPLOY.md) | the CPU sidecar, a GPU host, Runpod, operations |
 | [docs/IMAGE.md](docs/IMAGE.md) | what is in the images and how they run |
 | [docs/BENCHMARKS.md](docs/BENCHMARKS.md) | latency on CPU and GPU, accuracy on the eval sets |

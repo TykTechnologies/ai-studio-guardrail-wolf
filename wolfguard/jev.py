@@ -49,6 +49,13 @@ class JevBackend:
     def detokenize(self, ids: list[int]) -> str:
         return self.tok.decode(ids)
 
+    def spans(self, text: str) -> list[tuple[int, int]] | None:
+        """Each token's character span (a fast tokenizer's offsets); None when it has none."""
+        try:
+            return [tuple(o) for o in self.tok(text, add_special_tokens=False, return_offsets_mapping=True)["offset_mapping"]]
+        except (NotImplementedError, KeyError, ValueError):
+            return None
+
     def prepare(self, question):
         q_ids = self.model._ids(question.instructions, self.model.max_q)
         with self.torch.no_grad():

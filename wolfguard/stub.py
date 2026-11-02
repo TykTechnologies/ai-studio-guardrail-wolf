@@ -7,6 +7,7 @@ forwards, rows and prepares.
 """
 from __future__ import annotations
 
+import re
 import threading
 import time
 
@@ -33,6 +34,9 @@ class StubBackend:
 
     def detokenize(self, ids):
         return " ".join(self.words[i] for i in ids)
+
+    def spans(self, text):
+        return [m.span() for m in re.finditer(r"\S+", text)]
 
     def prepare(self, question):
         self.prepares += 1
