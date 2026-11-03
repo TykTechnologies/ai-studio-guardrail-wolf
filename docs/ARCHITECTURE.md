@@ -13,7 +13,8 @@ POST /v1/classify
                "tool_name": "shell", "tool_call_id": "call_1", "text": "..."}],
  "meta": {"vendor": "openai", "model": "gpt-4.1", "llm_id": 7, "app_id": 3, "request_id": ""}}
 → 200 {"flagged": true, "findings": [{"detector": "tool_result.block", "category": "injection",
-        "label": "injection.indirect_presence", "score": 0.98, "severity": "critical", "segment_index": 0}]}
+        "label": "injection.indirect_presence", "score": 0.98, "severity": "critical", "segment_index": 0,
+        "span": {"start": 10240, "end": 18311}}]}
 ```
 
 What the gateway sends, and what that means here:
@@ -47,6 +48,13 @@ What the gateway sends, and what that means here:
   byte ranges); the response lists the segments handled in
   `templates_handled`, and the full-text backstop's findings carry
   `"backstop": true`. See [TEMPLATES.md](TEMPLATES.md).
+- **Finding spans.** A finding carries `span`, the UTF-8 byte range of the
+  segment's `text` (a backstop finding's: of the template's `full_text`)
+  from the first to the last window that reached the decision's tier (see
+  [REFERENCE.md](REFERENCE.md#finding-spans)). AI Studio's LLM judge is
+  shown the text around it, and may soften the finding only when that range
+  fits its window: without a span, a long segment's finding could be
+  anywhere, so the judge could never vouch for it.
 
 ## Scoring
 

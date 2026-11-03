@@ -252,8 +252,12 @@ def finding_for(stage: str, segment_index: int, verdict: dict, requested) -> dic
         level = hits[-1]
     else:
         level = d
-    return {"detector": f"{stage}.{level}", "category": "injection", "label": verdict.get("label", d), "score": verdict.get("score", 1.0),
-            "severity": "warning" if level == "review" else "critical", "segment_index": segment_index}
+    f = {"detector": f"{stage}.{level}", "category": "injection", "label": verdict.get("label", d), "score": verdict.get("score", 1.0),
+         "severity": "warning" if level == "review" else "critical", "segment_index": segment_index}
+    span = verdict.get("span")
+    if isinstance(span, (list, tuple)) and len(span) == 2:
+        f["span"] = {"start": int(span[0]), "end": int(span[1])}
+    return f
 
 
 def respond(findings: list, templated: bool, handled: set) -> JSONResponse:
@@ -284,7 +288,10 @@ def backstop_verdict(r) -> dict | None:
     score = round(a.risk, 4)
     if tpl.backstop == "enforce" and tpl.min_score is not None and score < tpl.min_score:
         return None
-    return {"decision": b.decision, "label": label, "score": score}
+    out = {"decision": b.decision, "label": label, "score": score}
+    if b.span is not None:
+        out["span"] = list(b.span)       # bytes in the template's full text
+    return out
 
 
 def verdict_of(r) -> dict:
@@ -304,7 +311,10 @@ def _primary(r) -> dict:
     s = round(score.risk, 4) if score is not None else 1.0
     if any(x.severity == "block" for x in r.rules) and RANK[r.decision] >= RANK[BLOCK] and (score is None or s < 0.5):
         label, s = next(x.name for x in r.rules if x.severity == "block"), 1.0
-    return {"decision": r.decision, "label": label, "score": s}
+    out = {"decision": r.decision, "label": label, "score": s}
+    if getattr(r, "span", None) is not None:
+        out["span"] = list(r.span)       # bytes in the segment's text
+    return out
 
 
 def parse_allowlist(spec: str):

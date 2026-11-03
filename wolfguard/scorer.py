@@ -96,6 +96,10 @@ class ItemResult:
     backstop: "ItemResult | None" = None             # template: the full text's decision over the windows it counts
     backstop_windows: tuple = (0, 0)                 # template: (windows scored, windows skipped as approved text only)
     backstop_unscanned: bool = False                 # template: the full text is over the size limit, not scored
+    window_cuts: list | None = None                  # each main window's (start, end) characters in item.text; None: unknown
+    paste_cuts: list | None = None                   # the same for the paste windows (None unless the paste is the whole text)
+    backstop_cuts: list | None = None                # each counted backstop window's characters in the template's full text
+    span: tuple | None = None                        # UTF-8 byte range of the text that decided (see finding_span)
 
 
 @dataclass
@@ -131,10 +135,24 @@ class Scorer:
         step = tokens - overlap
         return [self.backend.detokenize(ids[i : i + tokens]) for i in range(0, len(ids) - overlap, step)]
 
-    def backstop_windows(self, tpl: tplmod.Template, tokens: int, overlap: int) -> list[tuple[str, bool]]:
+    def window_cuts(self, text: str, tokens: int, overlap: int) -> list[tuple[int, int]] | None:
+        """Where each of windows()'s windows lies in text, in characters: the first
+        token's start to the last token's end. None when the backend reports no
+        token spans (or not one per token)."""
+        ids = self.backend.tokenize(text)
+        if len(ids) <= tokens:
+            return [(0, len(text))]
+        spans = self.backend.spans(text) if hasattr(self.backend, "spans") else None
+        if spans is None or len(spans) != len(ids):
+            return None
+        step = tokens - overlap
+        return [(spans[i][0], spans[min(i + tokens, len(ids)) - 1][1]) for i in range(0, len(ids) - overlap, step)]
+
+    def backstop_windows(self, tpl: tplmod.Template, tokens: int, overlap: int) -> list[tuple[str, bool, tuple | None]]:
         """The full text's windows (the same cut as windows()), each with whether it
-        counts: it holds a token outside the approved ranges. Without token spans
-        from the backend every window counts."""
+        counts: it holds a token outside the approved ranges, and where it lies in the
+        full text in characters (None without token spans). Without token spans from
+        the backend every window counts."""
         ids = self.backend.tokenize(tpl.full_text)
         spans = self.backend.spans(tpl.full_text) if hasattr(self.backend, "spans") else None
         if spans is not None and len(spans) != len(ids):
@@ -146,9 +164,11 @@ class Scorer:
             cuts = [(i, min(i + tokens, len(ids))) for i in range(0, len(ids) - overlap, step)]
         out = []
         for a, b in cuts:
-            text = tpl.full_text if (a, b) == (0, len(ids)) else self.backend.detokenize(ids[a:b])
+            whole = (a, b) == (0, len(ids))
+            text = tpl.full_text if whole else self.backend.detokenize(ids[a:b])
             counts = spans is None or not all(tplmod.inside(sp, tpl.exempt_chars) for sp in spans[a:b])
-            out.append((text, counts))
+            at = (0, len(tpl.full_text)) if whole else (spans[a][0], spans[b - 1][1]) if spans is not None else None
+            out.append((text, counts, at))
         return out
 
     def _backstop_plan(self, plans, res, st: Stage, scene) -> None:
@@ -160,8 +180,10 @@ class Scorer:
             res.backstop_unscanned = True
             return
         bw = self.backstop_windows(tpl, st.window_tokens, st.window_overlap)
-        counted = [w for w, c in bw if c]
+        counted = [w for w, c, _ in bw if c]
         res.backstop_windows = (len(counted), len(bw) - len(counted))
+        cuts = [at for _, c, at in bw if c]
+        res.backstop_cuts = None if any(at is None for at in cuts) else cuts
         if counted:
             plans.append((res, "backstop", st.questions, [scene(w) for w in counted]))
 
@@ -219,6 +241,8 @@ class Scorer:
                 # A runner's prompt around untrusted text: score it as untrusted content.
                 res.scored_as = "tool_result"
                 res.window_texts = self.windows(checked.text, tst.window_tokens, tst.window_overlap)
+                if checked.text == item.text:
+                    res.window_cuts = self.window_cuts(checked.text, tst.window_tokens, tst.window_overlap)
                 sc = [scenes.tool_result(w, app.untrusted_source, tst.with_tool_call) for w in res.window_texts]
                 res.windows = len(sc)
                 plans.append((res, "main", tst.questions, sc))
@@ -226,6 +250,8 @@ class Scorer:
                 results.append(res)
                 continue
             ws = res.window_texts = self.windows(checked.text, st.window_tokens, st.window_overlap)
+            if checked.text == item.text:   # the pre-check rewrote nothing: offsets hold in the text sent
+                res.window_cuts = self.window_cuts(checked.text, st.window_tokens, st.window_overlap)
             sc = self._scenes(st, item, ws, system)
             res.windows = len(sc)
             srcs = self.policy.tool_sources
@@ -239,6 +265,8 @@ class Scorer:
             if item.stage == "user_message" and st.paste_questions:
                 part = scenes.pasted_part(checked.text, st.paste_min_chars)
                 if part:
+                    if part == checked.text:
+                        res.paste_cuts = res.window_cuts
                     psc = [scenes.pasted(w, system) for w in self.windows(part, st.window_tokens, st.window_overlap)]
                     plans.append((res, "paste", st.paste_questions, psc))
             if item.stage == "user_message":
@@ -272,7 +300,7 @@ class Scorer:
         # Aggregate: the riskiest window per question (reported), and every window's risks (to decide).
         for pi, (res, kind, qs, sc) in enumerate(plans):
             if kind == "backstop":
-                res.backstop = ItemResult(res.item, ALLOW, scored_as=res.scored_as, windows=len(sc))
+                res.backstop = ItemResult(res.item, ALLOW, scored_as=res.scored_as, windows=len(sc), window_cuts=res.backstop_cuts)
             target = res.answers if kind == "main" else res.paste if kind == "paste" else res.backstop.answers
             per_window = [{q.name: q.risk_of(answers[(pi, si)][qi]) for qi, q in enumerate(qs)} for si in range(len(sc))]
             if kind == "main":
@@ -295,11 +323,13 @@ class Scorer:
             if res.skipped:
                 continue
             res.decision = self._decide(res)
+            res.span = self.finding_span(res, res.item.text)
             if res.scored_as and res.decision == BLOCK:
                 res.decision = REVIEW        # untrusted user messages: only the critical tier blocks
             if res.backstop is not None:
                 b = res.backstop
                 b.decision = self._decide(b)
+                b.span = self.finding_span(b, res.item.template.full_text)
                 if b.scored_as and b.decision == BLOCK:
                     b.decision = REVIEW
             if res.item.stage == "tool_definition" and res.item.tool_name in defs.builtin_names and RANK[res.decision] > RANK[REVIEW]:
@@ -361,6 +391,35 @@ class Scorer:
             if decision == ALLOW and any(answers[q.name].risk >= q.review for q in deciding):
                 decision = REVIEW
         return decision
+
+    def finding_span(self, res: ItemResult, text: str) -> tuple[int, int] | None:
+        """The UTF-8 byte range of text (the text the gateway sent, in which the
+        finding is) from the first to the last window that reached the decision's
+        tier on a deciding question: a block's or critical's block threshold, a
+        review's review threshold. A gateway's second opinion that is shown this
+        range has seen every window that made the decision, so the range covers
+        every window that did, never only the riskiest. None, so the gateway
+        treats the finding as anywhere in the text, when a rule decided (a canary
+        or hard rule is a match, not a window), when the pre-check rewrote the
+        text (hidden tag characters), when the pasted part scored is not the whole
+        text, or when the backend reports no token offsets."""
+        if res.decision in (ALLOW, None) or any(r.severity == "block" for r in res.rules):
+            return None
+        st = self.policy.stages[res.scored_as or res.item.stage]
+        cut = (lambda q: q.review) if res.decision == REVIEW else (lambda q: q.block)
+        ranges = []
+        for qs, answers, windows, cuts in ((st.questions, res.answers, res.window_risks, res.window_cuts),
+                                           (st.paste_questions, res.paste, res.paste_window_risks, res.paste_cuts)):
+            deciding = [q for q in qs if q.decides and q.name in answers and not (res.read_only and q.read_only == "report")]
+            for i, risks in enumerate(windows):
+                if any(risks.get(q.name, 0.0) >= cut(q) for q in deciding):
+                    if cuts is None or i >= len(cuts):
+                        return None
+                    ranges.append(cuts[i])
+        if not ranges:
+            return None
+        start, end = min(a for a, _ in ranges), max(b for _, b in ranges)
+        return len(text[:start].encode("utf-8")), len(text[:end].encode("utf-8"))
 
     def _corroboration(self, res: ItemResult, window: int | None) -> tuple:
         """The corroborating rules a local item breaks: in the agreeing window,
