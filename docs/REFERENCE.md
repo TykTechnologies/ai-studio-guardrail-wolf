@@ -129,6 +129,28 @@ the input.
 For `user_messages: untrusted` apps, a `block` user message is reported as
 `review`: only the critical tier blocks.
 
+### Finding spans
+
+Each finding carries `span` (`{"start", "end"}`): the UTF-8 byte range, in
+the segment's `text` as sent (a backstop finding's: in the template's
+`full_text`), from the start of the first window to the end of the last one
+in which a deciding question reached the decision's tier: its `block`
+threshold for a `block` or `critical` decision, its `review` threshold for a
+`review`. Every window that made the decision lies inside the range, never
+only the riskiest, so a second opinion shown the range has seen all of it;
+windows that only reached a lower tier are left out. With `agree: window`, a
+window counts when any deciding question reaches the threshold there (a
+superset of the windows where they agree). The paste questions' windows count
+too when the pasted part is the whole message.
+
+A finding has no span (the gateway then treats it as anywhere in the
+segment) when a rule decided (a canary, secret access or shell exfiltration
+is a match, not a window), when the pre-check rewrote the text (Unicode tag
+characters), when the pasted part scored is fenced or quoted blocks rather
+than the whole message, or when the backend reports no token offsets. A
+verdict kept in the store keeps its span; one stored by an earlier version
+has none.
+
 ### Pre-checks (every segment, before the model)
 
 | Rule | Severity |

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0
+
+Findings say where they are, so AI Studio's LLM judge can clear false
+positives in long content.
+
+- **Finding spans.** Each finding carries `span`, the byte range of the
+  windows that reached the decision's tier (every one of them, not only the
+  riskiest). AI Studio 2.3 shows its LLM judge (second opinion) the text
+  around a finding, and lets a benign opinion soften the finding only when it
+  saw everything that was flagged. Without a span, a finding in a segment
+  longer than the judge's window (4,000 characters) could be anywhere, so the
+  judge could never soften it. Findings decided by a rule, on text the
+  pre-check rewrote, or on a fenced paste carry no span: the judge treats
+  them as anywhere, as before. See [docs/REFERENCE.md](docs/REFERENCE.md#finding-spans).
+  AI Studio uses them from the release with TykTechnologies/ai-studio#940;
+  an earlier gateway drops them, and findings act as before.
+
 ## 0.2.1
 
 A full or failing volume no longer takes the guardrail down.
