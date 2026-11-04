@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.1
+
+The guardrail holds up better behind a proxy and when calls arrive together.
+
+- **Idle connections stay open for 75 seconds** (`WOLFGUARD_KEEP_ALIVE`).
+  uvicorn's own default closed them after 5. A proxy in front of the
+  service, such as Runpod's, keeps its connections to the service open and
+  reuses them, and one reused just as the service closed it answered its
+  caller 502.
+- **The same content arriving at once is scored once.** AI Studio sends the
+  same content through every guardrail filter of a request at the same
+  moment. A call now waits for another call's scoring of the same content
+  (same app and policy version) instead of taking a worker of its own, at
+  most `WOLFGUARD_QUEUE_WAIT` + `WOLFGUARD_FOLLOW_WAIT` (30) seconds. If that
+  scoring fails, or its caller leaves, the waiting calls score it themselves.
+  `wolfguard_shared_total` counts the segments answered this way.
+- **A restarting worker takes no calls until it is ready.** A worker that
+  died was put straight back in its lane while it loaded its model again, so
+  the next call sent to it waited out the whole load and timed out. It now
+  rejoins the lane once it is ready, and calls go to the other workers
+  meanwhile.
+
 ## 0.3.0
 
 Findings say where they are, so AI Studio's LLM judge can clear false

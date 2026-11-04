@@ -80,6 +80,13 @@ class Settings:
     # Under enforcement keep queue_wait below the filter's timeout_ms.
     queue_max: int = 32
     queue_wait: float = 20.0
+    # A call whose content another call is scoring waits for that score at most
+    # queue_wait + follow_wait seconds, then scores it itself.
+    follow_wait: float = 30.0
+    # How long an idle keep-alive connection stays open. Longer than the proxy in
+    # front keeps its connections to us (Runpod's), so the proxy never reuses one
+    # we are closing; uvicorn's own default (5 s) answered such a call 502.
+    keep_alive: float = 75.0
     max_body_bytes: int = 4 << 20
     decision_log: str = "-"             # a path, or "-" for stdout
     preview: bool = False               # log a truncated preview of flagged segments
@@ -122,7 +129,7 @@ class Settings:
                            ("small_chars", int), ("queue_max", int), ("queue_wait", float), ("max_body_bytes", int),
                            ("preview_chars", int), ("reload_interval", float), ("debug_delay_ms", int),
                            ("flagged_ttl", float), ("clean_ttl", float), ("bg_queue_max", int), ("bg_queue_wait", float),
-                           ("log_max_mb", float), ("log_keep", int)):
+                           ("log_max_mb", float), ("log_keep", int), ("follow_wait", float), ("keep_alive", float)):
             v = env.get("WOLFGUARD_" + name.upper())
             if v:
                 setattr(s, name, cast(v))
@@ -205,6 +212,7 @@ class Metrics:
         self.deferred = Counter("wolfguard_deferred_total", "Deferred (background) scoring per segment", ["outcome"], registry=r)
         self.busy = Counter("wolfguard_busy_total", "Segments that could not be scored in time, by when_busy", ["stage", "outcome"], registry=r)
         self.store_errors = Counter("wolfguard_store_errors_total", "Verdict store operations that failed (scored or dropped instead)", ["op"], registry=r)
+        self.shared = Counter("wolfguard_shared_total", "Segments answered by another call's scoring of the same content, at the same time", registry=r)
         self.log_errors = Counter("wolfguard_log_errors_total", "Decision or preview log lines that could not be written", ["log"], registry=r)
         self._tools = set()
 
@@ -417,6 +425,7 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
     verdicts = storemod.VerdictStore(settings.store, settings.flagged_ttl, settings.clean_ttl,
                                      lambda op: metrics.store_errors.labels(op).inc()) if settings.store else None
     pending: dict[str, asyncio.Future] = {}     # store key -> its background scoring under way (.started: when)
+    inflight: dict[str, asyncio.Future] = {}    # content key -> its inline scoring under way (the verdict, or None)
     background: set = set()                     # running background tasks (kept referenced)
     if lanes is None:
         Worker = ProcessWorker if settings.workers == "process" else ThreadWorker
@@ -438,6 +447,7 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
     app = FastAPI(title="wolfguard", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.store, app.state.lanes, app.state.metrics, app.state.dlog = store, lanes, metrics, dlog
     app.state.verdicts, app.state.pending, app.state.background = verdicts, pending, background
+    app.state.inflight = inflight
 
     def watch():
         while not stop.wait(settings.reload_interval):
@@ -714,26 +724,89 @@ def create_app(settings: Settings, lanes: dict | None = None) -> FastAPI:
                 for k in deferred:
                     decided[k] = {"decision": ALLOW, "pending": True}
 
-        # Inline: scored now, ahead of background work.
-        if inline:
-            lane = lane_for(inline)
+        # Inline content another call is scoring right now (AI Studio sends the same
+        # content through every guardrail filter at once) waits for that score
+        # instead of taking a worker of its own. The key is the content's (as the
+        # verdict store's), never a call's own segment index.
+        def content_key(k):
+            return storemod.item_key(version, tenant, keyed[k][0])
+
+        def claim(ks):
+            """Mark ks as being scored by this call, before it first awaits, so the calls after it wait for it."""
+            loop = asyncio.get_running_loop()
+            mine = {content_key(k): loop.create_future() for k in ks}
+            inflight.update(mine)
+            return mine
+
+        async def score_inline(ks, mine):
+            """Score ks on a worker, sharing each verdict with calls waiting for the same content; returns an error response or None."""
+            lane = lane_for(ks)
+            got = {}
             try:
-                (results, stats), ms = await lane.run(sub_body(inline), doc, gone=request.is_disconnected, priority=INLINE)
-                got = record(inline, results, stats, ms, lane, "inline")
+                (results, stats), ms = await lane.run(sub_body(ks), doc, gone=request.is_disconnected, priority=INLINE)
+                got = record(ks, results, stats, ms, lane, "inline")
                 decided.update(got)
                 handled_keys.update(k for k, v in got.items() if not v.get("skipped"))
                 stage_label = results[0].item.stage if results else "none"
-                metrics.latency.labels(stage_label, size_bucket(sum(len(keyed[k][0].text) for k in inline))).observe(ms / 1000)
+                metrics.latency.labels(stage_label, size_bucket(sum(len(keyed[k][0].text) for k in ks))).observe(ms / 1000)
             except Abandoned as e:
                 return reject(499, "abandoned", str(e))
             except Saturated as e:
-                err = busy(inline, lambda e=e: reject(503, "saturated", str(e)))
+                err = busy(ks, lambda e=e: reject(503, "saturated", str(e)))
                 if err is not None:
                     return err
             except WorkerFailed as e:
-                err = busy(inline, lambda e=e: reject(503, "worker", f"scoring failed: {e}"))
+                err = busy(ks, lambda e=e: reject(503, "worker", f"scoring failed: {e}"))
                 if err is not None:
                     return err
+            finally:
+                # Waiting calls get the verdict, or None (no score: they score it themselves).
+                by_content = {content_key(k): v for k, v in got.items()}
+                for ck, f in mine.items():
+                    if inflight.get(ck) is f:
+                        del inflight[ck]
+                    if not f.done():
+                        f.set_result(by_content.get(ck))
+            return None
+
+        async def follow(fs):
+            """Wait for the calls scoring this content; returns the keys still without a verdict."""
+            live = {f for f in fs.values() if not f.done()}
+            if live:
+                await asyncio.wait(live, timeout=settings.queue_wait + settings.follow_wait)
+            left = []
+            for k, f in fs.items():
+                v = f.result() if f.done() and not f.cancelled() else None
+                if v is None:
+                    left.append(k)
+                    continue
+                metrics.shared.inc()
+                decided[k] = v
+                if not v.get("skipped"):
+                    handled_keys.add(k)
+            return left
+
+        # Inline: scored now, ahead of background work.
+        todo = list(inline)
+        for last in (False, False, True):
+            if not todo:
+                break
+            lead, waiting = [], {}
+            for k in todo:
+                f = None if last else inflight.get(content_key(k))
+                if f is not None and not f.done():
+                    waiting[k] = f
+                else:
+                    lead.append(k)
+            jobs = [score_inline(lead, claim(lead))] if lead else []
+            if waiting:
+                jobs.append(follow(waiting))
+            out = await asyncio.gather(*jobs)
+            if lead and out[0] is not None:
+                return out[0]
+            # Left without a verdict: the call scoring it failed, or its caller left.
+            # Another round: it waits for a call that took it over, else scores it.
+            todo = out[-1] if waiting else []
 
         # Content an earlier call is still scoring (a client's next request racing
         # its background score): a short wait for it, else clean for now.
@@ -821,6 +894,11 @@ def unix_socket(path: str, mode: int = 0o660, gid: int | None = None) -> socket.
     return s
 
 
+def uvicorn_config(app, s: Settings):
+    import uvicorn
+    return uvicorn.Config(app, log_level="warning", access_log=False, lifespan="on", timeout_keep_alive=s.keep_alive)
+
+
 def main(argv=None):
     import uvicorn
     ap = argparse.ArgumentParser(prog="wolfguard")
@@ -839,7 +917,7 @@ def main(argv=None):
     if a.stub:
         s.backend = {"kind": "stub"}
     app = create_app(s)
-    cfg = uvicorn.Config(app, log_level="warning", access_log=False, lifespan="on")
+    cfg = uvicorn_config(app, s)
     server = uvicorn.Server(cfg)
     if a.socket:
         sock = unix_socket(a.socket, gid=a.socket_gid)

@@ -193,6 +193,8 @@ has none.
 | `WOLFGUARD_WORKERS` | `process` | `thread` runs the model in-process (tests, development) |
 | `WOLFGUARD_QUEUE_MAX`, `WOLFGUARD_QUEUE_WAIT` | 32, 20 | Per lane: inline calls waiting at most, and seconds each may wait; beyond either, 503 (or the stage's `when_busy`) |
 | `WOLFGUARD_BG_QUEUE_MAX`, `WOLFGUARD_BG_QUEUE_WAIT` | 256, 300 | The same for background (deferred) scoring, which always yields to inline calls |
+| `WOLFGUARD_FOLLOW_WAIT` | 30 | Content another call is scoring at the same moment waits for that call's verdict, at most `WOLFGUARD_QUEUE_WAIT` + this many seconds, then is scored on its own |
+| `WOLFGUARD_KEEP_ALIVE` | 75 | Seconds an idle keep-alive connection stays open. Keep it longer than the proxy in front keeps its connections to the service, or the proxy can reuse one as it closes and answer its caller 502 |
 | `WOLFGUARD_MAX_BODY_BYTES` | 4194304 | Larger request bodies are refused with 413 |
 | `WOLFGUARD_ALLOW_IPS` | off | Client-IP allowlist: addresses or CIDRs, checked before the token. The Unix socket and the container's own health check on loopback pass |
 | `WOLFGUARD_CLIENT_IP_HEADER` | the TCP peer | Behind a proxy: the header that carries the client's address. Use one the proxy sets and clients cannot (`cf-connecting-ip` behind Cloudflare); the first entry is read |
@@ -224,6 +226,7 @@ The same store operations from inside a container:
 | `wolfguard_rejected_total` | `code`, `reason` | Refused calls: 413 too large, 400 invalid, 503 `saturated` or `worker`, 499 `abandoned` (the caller left while queued) |
 | `wolfguard_skipped_total` | `reason` | Segments not scored: `app_skip`, `stage_off`, `not_requested` |
 | `wolfguard_cache_total` | `result` | The in-process scene cache |
+| `wolfguard_shared_total` | | Segments answered by another call's scoring of the same content at the same moment (AI Studio sends the same content through each guardrail filter at once) |
 | `wolfguard_store_total` | `result` | Verdict store lookups: `hit`, `hit_flagged`, `allowed`, `miss`, `pending_scored`, `pending_open` |
 | `wolfguard_deferred_total` | `outcome` | Background scoring: `queued`, `scored`, `dropped` |
 | `wolfguard_busy_total` | `stage`, `outcome` | Items not scored in time, by `when_busy` |
