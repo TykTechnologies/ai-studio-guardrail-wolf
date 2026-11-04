@@ -161,6 +161,14 @@ call whose caller has left is not scored (499). Only the stages a filter
 asks for are scored, and a skipped app never waits for a worker. Workers
 load the model one at a time.
 
+AI Studio sends the same content through every guardrail filter at once, so
+content another call is already scoring waits for that call's verdict
+instead of taking a worker of its own (same content, app and policy version,
+as the verdict store's key). If that scoring fails, or its caller leaves,
+the waiting calls score the content themselves. A worker that dies is
+restarted and takes no calls until its model is loaded again, so calls go
+to the lane's other workers instead of waiting out the load.
+
 ## Security model
 
 - **On the gateway's host:** a Unix socket, mode 0660, group 65532 (the

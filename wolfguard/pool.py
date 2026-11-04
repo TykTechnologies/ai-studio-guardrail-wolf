@@ -202,6 +202,7 @@ class Lane:
         self.bg_queue_max, self.bg_queue_wait = bg_queue_max, bg_queue_wait
         self._idle: list | None = None
         self._waiters: list[list] = [[], []]      # per class: futures, oldest first
+        self._rejoining: set = set()              # restarting workers' rejoin tasks (kept referenced)
 
     def ready(self) -> bool:
         return all(w.ready.is_set() for w in self.workers)
@@ -239,6 +240,12 @@ class Lane:
         raise Saturated(f"{self.name} lane: no worker within {wait}s")
 
     def _release(self, worker):
+        if not worker.ready.is_set():
+            # A worker that died is restarting (ProcessWorker.call): it loads its
+            # model again before it answers, and a call handed to it would wait
+            # out the whole load. It rejoins the lane once it is ready.
+            self._rejoin_when_ready(worker)
+            return
         for q in self._waiters:
             while q:
                 fut = q.pop(0)
@@ -246,6 +253,27 @@ class Lane:
                     fut.set_result(worker)
                     return
         self._idle.append(worker)
+
+    def _rejoin_when_ready(self, worker):
+        loop = asyncio.get_running_loop()
+        name = getattr(worker, "name", "?")
+
+        def wait():
+            # worker.ready is replaced on restart: read it each time round.
+            while not worker.ready.wait(0.5):
+                if worker.failed:
+                    return False
+            return True
+
+        async def rejoin():
+            if await loop.run_in_executor(None, wait):
+                log.info("%s lane: worker %s is ready again", self.name, name)
+                self._release(worker)
+            else:
+                log.error("%s lane: worker %s failed to restart (%s); the lane runs without it", self.name, name, worker.failed)
+        task = loop.create_task(rejoin())
+        self._rejoining.add(task)
+        task.add_done_callback(self._rejoining.discard)
 
     async def run(self, body, policy_doc, gone=None, priority=INLINE):
         """Score on a free worker. `gone` (async, optional) says whether the
